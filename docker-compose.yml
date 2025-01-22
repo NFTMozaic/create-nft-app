@@ -7,7 +7,7 @@ services:
       - "3333:3333"
     environment:
       - PORT=3333
-      - CHAIN=ws://assethub-chopsticks:8002  # Use service name instead of host.docker.internal
+      - CHAIN=ws://assethub-chopsticks:8002
       - MIN_LOG_LEVEL=info
       - EXTRINSIC_MORTAL_BLOCK_LENGTH=32
       - OPENAPI_SERVER_URL=http://localhost:3002

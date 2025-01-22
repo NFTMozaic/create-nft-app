@@ -1,39 +1,24 @@
 # assethub-next
 🔗 The AssetHub + Next.js template 🔗
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Set up local dev environment
 
-## Getting Started
+#### 1. Set your secrets
 
-First, run the development server:
+Put your secrets to the [`secret.ts`](./src/sdk/secret.ts) (under `.gitignore`).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- `pinataJwt`: get your Pinata JWT token for free on the [Pinata Cloud](https://pinata.cloud/). After registration, go to the [API keys section](https://app.pinata.cloud/developers/api-keys) and generate your API key. Save the JWT token.
+- `substrateSecret`: generate random mnemonic seed phrase. Use `polkadot{.js}` or any other wallet to generate a 12-word mnemonic secret phrase. You may also use built-in secrets such as `//Alice` or `//Bob`.
+
+#### 2. Spin up local testnet and SDK
+
+You are good to go if you decide to use the `Alice` account. Otherwise – add your address to the chopsticks config file: [`kusama-assethub.yml`](./kusama-assethub.yml).
+
+Run local SDK against Kusama fork (powered by Acala Chopsticks):
+
+```sh
+docker compose up
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The network will be launched at port `8002` (`ws://localhost:8002`). You may want to check your accounts and balances on the [polkadot apps](https://polkadot.js.org/apps/?rpc=ws://localhost:8002#/accounts). 
+- The SDK will be launched at port `3333` (`http://localhost:3333`). Check the raw HTTP methods at [http://localhost:3333/documentation/static/index.html](http://localhost:3333/documentation/static/index.html)

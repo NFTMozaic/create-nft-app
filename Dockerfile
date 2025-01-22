@@ -8,4 +8,4 @@ CMD ["chopsticks", "--config=/app/config.yml"]
 
 FROM base as assethub
 
-COPY .docker/chopsticks/kusama-assethub.yml /app/config.yml
+COPY ./kusama-assethub.yml /app/config.yml
