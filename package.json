@@ -6,21 +6,26 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "fork": "npx @acala-network/chopsticks@latest --endpoint=wss://kusama-asset-hub-rpc.polkadot.io"
   },
   "dependencies": {
+    "@unique-nft/sdk": "^2.5.0",
+    "@unique-nft/sr25519": "^0.0.2",
+    "@unique-nft/utils": "^0.3.20",
+    "next": "15.1.4",
+    "pinata-web3": "^0.5.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.1.4"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.1.4",
-    "@eslint/eslintrc": "^3"
+    "typescript": "^5"
   },
   "packageManager": "yarn@1.22.22+sha256.c17d3797fb9a9115bf375e31bfd30058cac6bc9c3b8807a3d8cb2094794b51ca"
 }
