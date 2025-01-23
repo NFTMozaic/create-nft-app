@@ -20,12 +20,19 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.2.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^4.3.4",
+    "dotenv": "^16.4.7",
     "eslint": "^9",
     "eslint-config-next": "15.1.4",
-    "typescript": "^5"
+    "jsdom": "^26.0.0",
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.3"
   },
   "packageManager": "yarn@1.22.22+sha256.c17d3797fb9a9115bf375e31bfd30058cac6bc9c3b8807a3d8cb2094794b51ca"
 }
