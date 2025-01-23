@@ -31,3 +31,7 @@ docker compose up
 > Ensure your test environment is running based on the previous steps.
 
 Go to the [`__tests__`](./src/__tests__/) directory, read and execute test. Using VS Code, you may debug tests with breakpoints using [`vitest.explorer`](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) extension.
+
+## Collection metadata 101
+
+...
