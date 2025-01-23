@@ -16,7 +16,7 @@ describe.sequential("Pallet nfts", () => {
     // Init pinata
     const pinata = new PinataSDK({
       pinataJwt: config.pinataJwt,
-      pinataGateway: "orange-impressed-bonobo-853.mypinata.cloud",
+      pinataGateway: config.pinataGateway,
     });
 
     // Read a collection's cover image
@@ -38,24 +38,38 @@ describe.sequential("Pallet nfts", () => {
       coverImage,
       tokenImage,
     ]);
-    console.log(imagesUpload.IpfsHash);
     imagesIpfsHash = imagesUpload.IpfsHash;
+    console.log(imagesIpfsHash);
 
     // Define collection metadata
     const collectionMetadata = {
       name: "My NFT",
       description: "This is a unique NFT",
-      image: `ipfs://ipfs/${imagesUpload.IpfsHash}`,
+      image: `ipfs://ipfs/${imagesIpfsHash}/cover.png`,
     };
-    const metadataBlob = new Blob([JSON.stringify(collectionMetadata)], {
+    const collectionMetadataBlob = new Blob([JSON.stringify(collectionMetadata)], {
       type: "application/json",
     });
-    const metadataJson = new File([metadataBlob], "metadata.json", {
+    const collectionMetadataJson = new File([collectionMetadataBlob], "collection_metadata.json", {
+      type: "application/json",
+    });
+
+    const nftMetadata = {
+      name: "NFT name",
+      description: "NFT description",
+      image: `ipfs://ipfs/${imagesIpfsHash}/token.png`,
+      type: "image/png",
+      attributes: [{trait_type: "Age", value: "20"}],
+    }
+    const tokenMetadataBlob = new Blob([JSON.stringify(nftMetadata)], {
+      type: "application/json",
+    });
+    const tokenMetadataJson = new File([tokenMetadataBlob], "token_metadata.json", {
       type: "application/json",
     });
 
     // Upload metadata to IPFS
-    const metadataUpload = await pinata.upload.file(metadataJson);
+    const metadataUpload = await pinata.upload.fileArray([collectionMetadataJson, tokenMetadataJson]);
     metadataIpfsHash = metadataUpload.IpfsHash;
   });
 
@@ -81,7 +95,7 @@ describe.sequential("Pallet nfts", () => {
     collectionId = collectionResult.result.collectionId;
 
     // set uploaded metadata to the collection
-    const collectionMetadataUri = `ipfs://ipfs/${metadataIpfsHash}`;
+    const collectionMetadataUri = `ipfs://ipfs/${metadataIpfsHash}/collection_metadata.json`;
     await ah.nftsPallet.collection.setMetadata({
       collectionId,
       data: collectionMetadataUri,
@@ -111,12 +125,19 @@ describe.sequential("Pallet nfts", () => {
       mintTo: account.address,
     });
 
-    // Set NFT's metadata
-    const tokenMetadataUri = `ipfs://ipfs/${metadataIpfsHash}`;
+    // Set NFT's metadata (off-chain)
+    const tokenMetadataUri = `ipfs://ipfs/${metadataIpfsHash}/token_metadata.json`;
     await ah.nftsPallet.item.setMetadata({
       collectionId,
       itemId: result.itemId,
       data: tokenMetadataUri,
+    });
+
+    // Set token attributes (on-chain)
+    await ah.nftsPallet.attributes.set({
+      collectionId,
+      itemId: result.itemId,
+      attribute: { key: "Name", value: "Alex", namespace: "itemOwner" },
     });
 
     const metadataOnchain = await ah.nftsPallet.item.get({
@@ -124,5 +145,9 @@ describe.sequential("Pallet nfts", () => {
       itemId: result.itemId,
     });
     expect(metadataOnchain.metadata?.data).to.eq(tokenMetadataUri);
+
+    expect(metadataOnchain.attributes).to.have.length(1);
+    expect(metadataOnchain.attributes[0].key).eq("Name");
+    expect(metadataOnchain.attributes[0].value).eq("Alex");
   });
 });
