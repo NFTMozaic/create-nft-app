@@ -1,13 +1,10 @@
 :root {
-  /* Accent color (Apple-like blue) */
   --pdw-accent: #007aff;
 
-  /* Basic color scheme */
   --pdw-bg: #ffffff;
   --pdw-text: #111111;
   --pdw-border-color: #e5e5e5;
 
-  /* Spacing and sizing */
   --pdw-border-radius: 8px;
   --pdw-transition: 0.2s ease;
   --pdw-font-size-base: 16px;
@@ -16,7 +13,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #f8f8f8; /* Light, neutral background */
+  background-color: #f8f8f8;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
     Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   font-size: var(--pdw-font-size-base);

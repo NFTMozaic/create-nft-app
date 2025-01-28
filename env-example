@@ -1,0 +1,3 @@
+PINATA_JWT=eyJhbGciOiJIUz...
+MNEMONIC=//Alice
+NEXT_PUBLIC_REST_URL=https://rest.unique.network/v2/polkadot-asset-hub
