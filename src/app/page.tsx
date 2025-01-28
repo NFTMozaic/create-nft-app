@@ -1,9 +1,28 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./page.module.css";
+import {SdkContext} from "../lib/sdk/UniqueSdkContext";
+import { useContext, useEffect, useState } from "react";
 
 export default function Home() {
+  const {sdk} = useContext(SdkContext);
+  const [balance, setBalance] = useState("");
+
+  useEffect(() => {
+    const query = async () => {
+      if (!sdk) return;
+      console.log(sdk.options.baseUrl)
+      const balance = await sdk.balance.get({address: "12HaHwTrJbdqM912DjbNqDFFePUxS8vUs8BaJHPuhtAK6Adf"})
+      setBalance(balance.available);
+    }
+
+    query();
+  }, [sdk]);
+
   return (
     <div className={styles.page}>
+      <h1>Balance is {balance !== "" ? balance : "I don't know yet"}</h1>
       <main className={styles.main}>
         <Image
           className={styles.logo}
