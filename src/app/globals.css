@@ -1,19 +1,26 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Accent color (Apple-like blue) */
+  --pdw-accent: #007aff;
+
+  /* Basic color scheme */
+  --pdw-bg: #ffffff;
+  --pdw-text: #111111;
+  --pdw-border-color: #e5e5e5;
+
+  /* Spacing and sizing */
+  --pdw-border-radius: 8px;
+  --pdw-transition: 0.2s ease;
+  --pdw-font-size-base: 16px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #f8f8f8; /* Light, neutral background */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: var(--pdw-font-size-base);
+  color: var(--pdw-text);
 }
 
 body {

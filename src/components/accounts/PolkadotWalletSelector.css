@@ -1,0 +1,101 @@
+.pdw-container {
+  max-width: 480px;
+  margin: 40px auto;
+  background: var(--pdw-bg);
+  border: 1px solid var(--pdw-border-color);
+  border-radius: var(--pdw-border-radius);
+  padding: 24px;
+}
+
+.pdw-title {
+  margin: 0 0 24px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.pdw-error {
+  margin: 0 0 16px;
+  color: #c0392b;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.pdw-wallet-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pdw-wallet-button {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid var(--pdw-border-color);
+  border-radius: var(--pdw-border-radius);
+  background: #fafafa;
+  cursor: pointer;
+  transition: background-color var(--pdw-transition);
+}
+
+.pdw-available {
+  border-color: var(--pdw-accent);
+  color: var(--pdw-accent);
+  background: #fafafa;
+}
+.pdw-available:hover {
+  background: #f0f8ff;
+}
+
+.pdw-missing {
+  color: #555555;
+  border-color: #dddddd;
+}
+.pdw-missing:hover {
+  background: #f2f2f2;
+}
+
+.pdw-account-list {
+  border-top: 1px solid var(--pdw-border-color);
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+.pdw-account-list h3 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.pdw-account-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.pdw-account-label input[type="radio"] {
+  margin-right: 8px;
+  accent-color: var(--pdw-accent);
+}
+
+.pdw-disconnect-button {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid #ff3b30;
+  border-radius: var(--pdw-border-radius);
+  background: #ffffff;
+  color: #ff3b30;
+  cursor: pointer;
+  transition: background-color var(--pdw-transition);
+}
+
+.pdw-disconnect-button:hover {
+  background: #ffefed;
+}

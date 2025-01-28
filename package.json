@@ -10,6 +10,8 @@
     "fork": "npx @acala-network/chopsticks@latest --endpoint=wss://kusama-asset-hub-rpc.polkadot.io"
   },
   "dependencies": {
+    "@polkadot/extension-dapp": "^0.58.2",
+    "@polkadot/extension-inject": "^0.58.2",
     "@unique-nft/sdk": "^2.5.0",
     "@unique-nft/sr25519": "^0.0.2",
     "@unique-nft/utils": "^0.3.20",
