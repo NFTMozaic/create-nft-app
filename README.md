@@ -5,7 +5,7 @@
 
 #### 1. Set your secrets
 
-Put your secrets in the `.env` file, using [`env.example`](./env.example) as a template.
+Put your secrets in the `.env` file, using [`.env.example`](./.env.example) as a template.
 
 - `PINATA_JWT` and `PINATA_GATEWAY`: get your credentials for free on the [Pinata Cloud](https://pinata.cloud/). After registration, go to the [API keys section](https://app.pinata.cloud/developers/api-keys) and generate your API key. Save the JWT token and your gateway to the relevant environment variables.
 - `MNEMONIC`: generate a random mnemonic seed phrase. Use [`polkadot{.js}`](https://polkadot.js.org/extension/) or any other wallet to generate a 12-word mnemonic secret phrase. For the test environment and this example, you may also use built-in secrets such as `//Alice` or `//Bob`.
