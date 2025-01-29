@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import { AccountsContext } from '@/lib/wallets/AccountsProvider';
-import './PolkadotWalletSelector.css';
-import { shortPolkadotAddress } from '@/lib/utils';
+import { AccountsContext } from '@/app/lib/wallets/AccountsProvider';
+import './PolkadotWalletSelector.module.css';
+import { shortPolkadotAddress } from '@/app/lib/utils';
 
 const walletDownloadLinks: Record<string, string> = {
   "polkadot-js": "https://polkadot.js.org/extension/",

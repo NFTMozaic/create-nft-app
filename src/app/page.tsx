@@ -1,10 +1,10 @@
 "use client";
 
 import styles from "./page.module.css";
-import { SdkContext } from "../lib/sdk/UniqueSdkContext";
+import { SdkContext } from "./lib/sdk/UniqueSDKContext";
 import { useContext, useEffect, useState } from "react";
-import PolkadotWalletSelector from "@/components/accounts/PolkadotWalletSelector";
-import { AccountsContext } from "@/lib/wallets";
+import PolkadotWalletSelector from "@/app/components/accounts/PolkadotWalletSelector";
+import { AccountsContext } from "@/app/lib/wallets";
 
 export default function Home() {
   const { sdk } = useContext(SdkContext);
