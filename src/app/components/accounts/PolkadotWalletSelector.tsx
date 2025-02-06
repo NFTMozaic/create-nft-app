@@ -1,15 +1,9 @@
+'use client';
+
 import React, { useContext } from "react";
 import { AccountsContext } from "@/app/lib/wallets/AccountsProvider";
-import { shortPolkadotAddress } from "@/app/lib/utils";
+import { KNOWN_WALLETS, shortPolkadotAddress } from "@/app/lib/utils";
 import styles from "./PolkadotWalletSelector.module.css";
-
-const walletDownloadLinks: Record<string, string> = {
-  "polkadot-js": "https://polkadot.js.org/extension/",
-  "talisman": "https://talisman.xyz/",
-  "subwallet-js": "https://subwallet.app/",
-  "nova": "https://novawallet.io/",
-  "enkrypt": "https://www.enkrypt.com/",
-};
 
 const PolkadotWalletSelector: React.FC = () => {
   const accountsContext = useContext(AccountsContext);
@@ -35,39 +29,37 @@ const PolkadotWalletSelector: React.FC = () => {
       {error && <p className={styles.pdwError}>{error}</p>}
 
       <div className={styles.pdwWalletButtons}>
-        {Object.entries(walletDownloadLinks).map(([walletName, link]) => {
-          const wallet = wallets.find((w) => w.name === walletName);
+        {KNOWN_WALLETS.map(({ name, title, downloadLink }) => {
+          const wallet = wallets.find((w) => w.name === name);
           return (
             <button
-              key={walletName}
+              key={name}
               className={`${styles.pdwWalletButton} ${
                 wallet ? styles.pdwAvailable : styles.pdwMissing
               }`}
               onClick={() =>
-                wallet ? connectWallet(wallet.name) : window.open(link, "_blank")
+                wallet ? connectWallet(wallet.name) : window.open(downloadLink, "_blank")
               }
             >
-              {wallet
-                ? `Connect ${wallet.title}`
-                : `Download ${walletName.replace("-", " ")}`}
+              {wallet ? `Connect ${title}` : `Download ${title}`}
             </button>
           );
         })}
       </div>
 
-      {accounts.length > 0 && (
+      {accounts.size > 0 && (
         <div className={styles.pdwAccountList}>
           <h3>Connected Accounts</h3>
-          {accounts.map((account) => (
-            <label key={account.address} className={styles.pdwAccountLabel}>
+          {[...accounts.entries()].map(([address, account]) => (
+            <label key={address} className={styles.pdwAccountLabel}>
               <input
                 type="radio"
                 name="activeAccount"
-                checked={activeAccount?.address === account.address}
+                checked={activeAccount?.address === address || false}
                 onChange={() => setActiveAccount(account)}
               />
               {account.name || shortPolkadotAddress(account.address)}
-              <small> (By: {account?.meta?.source || "Unknown"})</small>
+              <small>By {account.wallet?.prettyName || "Unknown"}</small>
             </label>
           ))}
           <button className={styles.pdwDisconnectButton} onClick={disconnectWallet}>

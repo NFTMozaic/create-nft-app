@@ -21,10 +21,10 @@ describe.sequential("Pallet nfts", () => {
 
     // Read a collection's cover image
     const coverBlob = new Blob([
-      fs.readFileSync(path.join(process.cwd(), "src/__tests__/cover.png")),
+      fs.readFileSync(path.join(process.cwd(), "src/tests/cover.png")),
     ]);
     const tokenBlob = new Blob([
-      fs.readFileSync(path.join(process.cwd(), "src/__tests__/token.png")),
+      fs.readFileSync(path.join(process.cwd(), "src/tests/token.png")),
     ]);
     const coverImage = new File([coverBlob], "cover.png", {
       type: "image/png",

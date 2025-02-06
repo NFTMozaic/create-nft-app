@@ -14,7 +14,6 @@ export type SdkContextValueType = {
   sdk?: AssetHubInstance;
 };
 
-
 export const SdkContext = createContext<SdkContextValueType>({
   sdk: undefined,
 });
@@ -28,7 +27,7 @@ export const SdkProvider = ({ children }: PropsWithChildren) => {
     const connect = async () => {
       const sdk = await connectSdk(baseUrl);
       setSdk(sdk);
-    } 
+    };
     connect();
   }, []);
 

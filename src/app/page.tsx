@@ -47,22 +47,24 @@ export default function Home() {
     <div className={styles.page}>
       <PolkadotWalletSelector />
 
-      <div>
-        <h2>Balance is {balance !== "" ? balance : "I don't know yet"}</h2>
-        <input
-          type="text"
-          placeholder="Recipient Address"
-          value={toAddress}
-          onChange={(e) => setToAddress(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Amount"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-        <button onClick={transferBalance}>Send</button>
-      </div>
+      {accountContext?.activeAccount && (
+        <div>
+          <h2>Balance is {balance !== "" ? balance : "..."}</h2>
+          <input
+            type="text"
+            placeholder="Recipient Address"
+            value={toAddress}
+            onChange={(e) => setToAddress(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+          <button onClick={transferBalance}>Send</button>
+        </div>
+      )}
     </div>
   );
 }
