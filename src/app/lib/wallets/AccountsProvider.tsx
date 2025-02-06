@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { web3Enable, web3Accounts } from '@polkadot/extension-dapp';
+import React, { createContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import {IPolkadotExtensionAccount, Polkadot} from "@unique-nft/utils/extension";
 
 const KNOWN_WALLETS = [
   { name: 'polkadot-js', title: 'Polkadot.js' },
@@ -9,14 +9,6 @@ const KNOWN_WALLETS = [
   { name: "enkrypt", title: "Enkrypt" },
 ];
 
-interface Account {
-  address: string;
-  name?: string;
-  meta?: {
-    source?: string;
-  };
-}
-
 interface Wallet {
   name: string;
   title: string;
@@ -24,11 +16,11 @@ interface Wallet {
 
 interface AccountsContextProps {
   wallets: Wallet[];
-  accounts: Account[];
-  activeAccount: Account | null;
+  accounts: IPolkadotExtensionAccount[];
+  activeAccount: IPolkadotExtensionAccount | null;
   error: string | null;
   connectWallet: (walletName: string) => Promise<void>;
-  setActiveAccount: (account: Account) => void;
+  setActiveAccount: (account: IPolkadotExtensionAccount) => void;
   disconnectWallet: () => void;
 }
 
@@ -36,9 +28,31 @@ export const AccountsContext = createContext<AccountsContextProps | undefined>(u
 
 export const AccountsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [wallets, setWallets] = useState<Wallet[]>([]);
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [activeAccount, setActiveAccount] = useState<Account | null>(null);
+  const [accounts, setAccounts] = useState<IPolkadotExtensionAccount[]>([]);
+  const [activeAccount, setActiveAccount] = useState<IPolkadotExtensionAccount | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const connectWallet = useCallback(async (walletName: string, lastActiveAddress?: string) => {
+    setError(null);
+    const wallets = await Polkadot.listWallets();
+    const selectedExtension = wallets.wallets.find(w => w.name == walletName);
+
+    if (!selectedExtension) {
+      setError(`Failed to enable ${walletName}.`);
+      return;
+    }
+
+    const requestedWallet = await Polkadot.loadWalletByName(walletName);
+    setAccounts(requestedWallet.accounts);
+
+    if (!activeAccount) {
+      const restoredAccount = requestedWallet.accounts.find(acc => acc.address === lastActiveAddress) || requestedWallet.accounts[0] || null;
+      setActiveAccount(restoredAccount);
+      if (restoredAccount) localStorage.setItem('lastActiveAccount', restoredAccount.address);
+    }
+
+    localStorage.setItem('lastConnectedWallet', walletName);
+  }, [activeAccount]);
 
   useEffect(() => {
     const detectedWallets = KNOWN_WALLETS.filter(wallet => window.injectedWeb3?.[wallet.name]);
@@ -50,32 +64,9 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = ({ children }
     if (lastConnectedWallet) {
       connectWallet(lastConnectedWallet, lastActiveAccount);
     }
-  }, []);
+  }, [connectWallet]);
 
-  const connectWallet = async (walletName: string, lastActiveAddress?: string) => {
-    setError(null);
-    const extensions = await web3Enable('Your DApp Name');
-    const selectedExtension = extensions.find(ext => ext.name === walletName);
-
-    if (!selectedExtension) {
-      setError(`Failed to enable ${walletName}.`);
-      return;
-    }
-
-    const userAccounts = await web3Accounts();
-    setAccounts(userAccounts);
-
-    // Preserve the active account if it exists, otherwise set a default one
-    if (!activeAccount) {
-      const restoredAccount = userAccounts.find(acc => acc.address === lastActiveAddress) || userAccounts[0] || null;
-      setActiveAccount(restoredAccount);
-      if (restoredAccount) localStorage.setItem('lastActiveAccount', restoredAccount.address);
-    }
-
-    localStorage.setItem('lastConnectedWallet', walletName);
-  };
-
-  const handleSetActiveAccount = (account: Account) => {
+  const handleSetActiveAccount = (account: IPolkadotExtensionAccount) => {
     setActiveAccount(account);
     localStorage.setItem('lastActiveAccount', account.address);
   };
@@ -86,7 +77,7 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = ({ children }
     setAccounts([]);
     setActiveAccount(null);
     setError(null);
-    window.location.reload();
+    setWallets([...KNOWN_WALLETS])
   };
 
   return (

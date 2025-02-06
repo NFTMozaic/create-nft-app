@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { AccountsContext } from '@/app/lib/wallets/AccountsProvider';
-import './PolkadotWalletSelector.module.css';
-import { shortPolkadotAddress } from '@/app/lib/utils';
+import React, { useContext } from "react";
+import { AccountsContext } from "@/app/lib/wallets/AccountsProvider";
+import { shortPolkadotAddress } from "@/app/lib/utils";
+import styles from "./PolkadotWalletSelector.module.css";
 
 const walletDownloadLinks: Record<string, string> = {
   "polkadot-js": "https://polkadot.js.org/extension/",
@@ -15,37 +15,51 @@ const PolkadotWalletSelector: React.FC = () => {
   const accountsContext = useContext(AccountsContext);
 
   if (!accountsContext) {
-    return <div className="pdw-container">Loading...</div>;
+    return <div className={styles.pdwContainer}>Loading...</div>;
   }
 
-  const { wallets, accounts, activeAccount, connectWallet, setActiveAccount, disconnectWallet, error } = accountsContext;
+  const {
+    wallets,
+    accounts,
+    activeAccount,
+    connectWallet,
+    setActiveAccount,
+    disconnectWallet,
+    error,
+  } = accountsContext;
 
   return (
-    <div className="pdw-container">
-      <h2 className="pdw-title">Polkadot Wallet Selector</h2>
+    <div className={styles.pdwContainer}>
+      <h2 className={styles.pdwTitle}>Polkadot Wallet Selector</h2>
 
-      {error && <p className="pdw-error">{error}</p>}
+      {error && <p className={styles.pdwError}>{error}</p>}
 
-      <div className="pdw-wallet-buttons">
+      <div className={styles.pdwWalletButtons}>
         {Object.entries(walletDownloadLinks).map(([walletName, link]) => {
-          const wallet = wallets.find(w => w.name === walletName);
+          const wallet = wallets.find((w) => w.name === walletName);
           return (
             <button
               key={walletName}
-              className={`pdw-wallet-button ${wallet ? 'pdw-available' : 'pdw-missing'}`}
-              onClick={() => wallet ? connectWallet(wallet.name) : window.open(link, "_blank")}
+              className={`${styles.pdwWalletButton} ${
+                wallet ? styles.pdwAvailable : styles.pdwMissing
+              }`}
+              onClick={() =>
+                wallet ? connectWallet(wallet.name) : window.open(link, "_blank")
+              }
             >
-              {wallet ? `Connect ${wallet.title}` : `Download ${walletName.replace("-", " ")}`}
+              {wallet
+                ? `Connect ${wallet.title}`
+                : `Download ${walletName.replace("-", " ")}`}
             </button>
           );
         })}
       </div>
 
       {accounts.length > 0 && (
-        <div className="pdw-account-list">
+        <div className={styles.pdwAccountList}>
           <h3>Connected Accounts</h3>
-          {accounts.map(account => (
-            <label key={account.address} className="pdw-account-label">
+          {accounts.map((account) => (
+            <label key={account.address} className={styles.pdwAccountLabel}>
               <input
                 type="radio"
                 name="activeAccount"
@@ -53,10 +67,10 @@ const PolkadotWalletSelector: React.FC = () => {
                 onChange={() => setActiveAccount(account)}
               />
               {account.name || shortPolkadotAddress(account.address)}
-              <small> (By: {account?.meta?.source || 'Unknown'})</small>
+              <small> (By: {account?.meta?.source || "Unknown"})</small>
             </label>
           ))}
-          <button className="pdw-disconnect-button" onClick={disconnectWallet}>
+          <button className={styles.pdwDisconnectButton} onClick={disconnectWallet}>
             Disconnect Wallet
           </button>
         </div>
