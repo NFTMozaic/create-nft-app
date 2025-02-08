@@ -11,7 +11,7 @@ let metadataIpfsHash: string;
 let collectionId: number;
 
 describe.sequential("Pallet nfts", () => {
-  test("Can upload images and metadata for the future collection and NFTs", async () => {
+  test("Can upload images and metadata for the future collection and NFTs using Pinata SDK", async () => {
     // Step-1. upload collection level metadata to the IPFS
     // Init pinata
     const pinata = new PinataSDK({
