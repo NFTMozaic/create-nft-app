@@ -7,33 +7,34 @@ import {
   useMemo,
   useState,
 } from "react";
-import { AssetHubInstance } from "@unique-nft/sdk";
-import { connectSdk } from "./connect";
+import { AssetHub, AssetHubInstance } from "@unique-nft/sdk";
 
 export type SdkContextValueType = {
   sdk?: AssetHubInstance;
 };
 
-export const SdkContext = createContext<SdkContextValueType>({
+export const UniqueSDKContext = createContext<SdkContextValueType>({
   sdk: undefined,
 });
 
 export const baseUrl = process.env.NEXT_PUBLIC_REST_URL || "";
 
-export const SdkProvider = ({ children }: PropsWithChildren) => {
+export const UniqueSDKProvider = ({ children }: PropsWithChildren) => {
   const [sdk, setSdk] = useState<AssetHubInstance>();
 
   useEffect(() => {
     const connect = async () => {
-      const sdk = await connectSdk(baseUrl);
+      const sdk = AssetHub({
+        baseUrl,
+      });
       setSdk(sdk);
     };
     connect();
   }, []);
 
   return (
-    <SdkContext.Provider value={useMemo(() => ({ sdk }), [sdk])}>
+    <UniqueSDKContext.Provider value={useMemo(() => ({ sdk }), [sdk])}>
       {children}
-    </SdkContext.Provider>
+    </UniqueSDKContext.Provider>
   );
 };

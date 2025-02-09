@@ -13,6 +13,7 @@ services:
       - "8002:8002"
     networks:
       - backend
+    restart: always
 
   substrate-proxy:
     image: uniquenetwork/substrate-proxy-http-proxy:master

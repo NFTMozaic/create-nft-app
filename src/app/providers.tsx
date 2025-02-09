@@ -1,13 +1,13 @@
 "use client";
 
-import { SdkProvider } from "@/app/lib/sdk/UniqueSDKContext";
+import { UniqueSDKProvider } from "@/app/lib/sdk";
 import { AccountsProvider } from "@/app/lib/wallets";
 import { type ReactNode } from "react";
 
 export function Providers(props: { children: ReactNode }) {
   return (
     <AccountsProvider>
-      <SdkProvider>{props.children}</SdkProvider>
+      <UniqueSDKProvider>{props.children}</UniqueSDKProvider>
     </AccountsProvider>
   );
 }

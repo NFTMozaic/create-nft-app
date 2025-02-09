@@ -2,12 +2,12 @@
 
 import { useContext, useEffect, useState } from "react";
 import PolkadotWalletSelector from "@/app/components/accounts/PolkadotWalletSelector";
-import { SdkContext } from "./lib/sdk/UniqueSDKContext";
+import { UniqueSDKContext } from "./lib/sdk";
 import { AccountsContext } from "@/app/lib/wallets";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const { sdk } = useContext(SdkContext);
+  const { sdk } = useContext(UniqueSDKContext);
   const accountContext = useContext(AccountsContext);
   const [balance, setBalance] = useState("");
   const [toAddress, setToAddress] = useState("");

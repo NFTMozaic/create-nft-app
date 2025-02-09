@@ -14,11 +14,9 @@ Ensure you have the following installed on your computer:
 
 Then:
 
-1. Set up your environment 
-   1. Install dependencies (npm install)
-   2. Create a `.env` file using `.env.example`
-   3. Ensure Docker is installed
-2. Run the local blockchain & SDK
+1. Create a `.env` file using `.env.example` 
+2. Install dependencies: `npm install`
+3. Run the local blockchain & SDK
 
 ```sh
 docker compose up
@@ -36,15 +34,15 @@ Test your local environment:
 npm run dev
 ```
 
-App runs on http://localhost:3000
+App runs on http://localhost:3000.
 
 
-# Overview
+# Intro
 
-This template aims to bootstrap an NFT application on `Asset Hub` by Polkadot. It utilizes [`@unique-nft/sdk`](https://www.npmjs.com/package/@unique-nft/sdk) for seamless blockchain interactions.
+This template aims to bootstrap an NFT application on `Asset Hub by Polkadot`. It utilizes [`@unique-nft/sdk`](https://www.npmjs.com/package/@unique-nft/sdk) for seamless blockchain interactions.
 
-- If you need a quick start guide on how to build on Polkadot – continue to read this document. 
-- If you want to better understand how the SDK works – proceed to the [official documentation](https://docs.unique.network/).
+- If you need a quick start guide on how to build on Polkadot, continue reading this document. 
+- If you want to understand how the SDK works, proceed to the [official documentation](https://docs.unique.network/).
 
 ## Main components overview
 
@@ -59,9 +57,9 @@ There are plenty of publicly available nodes you can use to send transactions. Y
 > [!TIP]
 > You can receive testnet tokens for free at https://faucet.polkadot.io/
 
-For this workshop, we will use our local testnet version using the Acala Chopsticks framework, which creates a local fork of a real network. You may proceed to the [official GitHub repo](https://github.com/AcalaNetwork/chopsticks) to understand how Chopsticks work.
+For this workshop, we will use our local testnet version using the Acala Chopsticks framework, which creates a local fork of a real network. To understand how Chopsticks works, you may proceed to the [official GitHub repo](https://github.com/AcalaNetwork/chopsticks).
 
-For this workshop, we have already crafted all the needed configurations for your own local testnet. In a few moments, we will launch and test it along with the SDK server.
+We have already crafted all the configurations for this workshop for your local testnet. In a few moments, we will launch and test it along with the SDK server.
 
 ### 2. Unique SDK
 
@@ -74,9 +72,9 @@ Unique SDK provides a convenient and lightweight way to interact with Substrate-
 
 ### Running local Asset Hub node & SDK
 
-We'll run a local SDK against Kusama fork (powered by Acala Chopsticks). Your computer should have Docker installed.
+We'll launch a local SDK against Kusama fork using Acala Chopsticks.
 
-**First**, let's check the [docker-compose.yml](./docker-compose.yml) file. It comprises two services: `assethub-chopsticks` for local the local node and `substrate-proxy` for the SDK. Take a note:
+**First**, let's check the [docker-compose.yml](./docker-compose.yml) file. It comprises two services: `assethub-chopsticks` for the local node and `substrate-proxy` for the SDK. Take a note:
 
 - The local blockchain will be launched on port `8002`
 - The SDK will be launched on port `3333`
@@ -84,7 +82,7 @@ We'll run a local SDK against Kusama fork (powered by Acala Chopsticks). Your co
 
 **Second**, let's check the [Chopsticks configuration](./kusama-assethub.yml). Take a note:
 
-- the fork will be created using the Kusama network endpoint: `endpoint: wss://kusama-asset-hub-rpc.polkadot.io`
+- the fork will be created targeting the Kusama network endpoint: `endpoint: wss://kusama-asset-hub-rpc.polkadot.io`
 - Your blockchain will have accounts with `free balances`. You may use these accounts for testing purposes or add your account to the list.
 
 **Finally**, run your environment:
@@ -116,29 +114,31 @@ Now run your Next.js application:
 npm run dev
 ```
 
-Your application will normally run on port `3000`. Go to `http://localhost:3000` and check that your application is up and running. On the screen, you should see the Polkadot Wallet Selector component.
+Your application will normally run on port `3000`. Go to `http://localhost:3000` and check that your application is running. On the screen, you should see the Polkadot Wallet Selector component.
 
-<!-- TODO  screen -->
+<img src="./images/wallets.png">
 
 If you don't have any Substrate wallets listed – install any of them and create an account. Then connect your wallet to the app and give it a try:
 
 1. Make sure your balance is more than 0. If it is zero – go to the [Polkadot{.js} portal](https://polkadot.js.org/apps/?rpc=ws://localhost:8002#/accounts) and transfer some KSM tokens from one of the predefined accounts (Alice, Bob...) to your address. 
 2. Return to the application and execute a transfer from your account to any other one using the built-in form. If the transaction succeeds, you will see the alert.
 
-<!-- TODO: the main frontend components overview -->
+> [!NOTE]
+> - Review [UniqueSDKProvider.tsx](./src/app/lib/sdk/UniqueSDKProvider.tsx) to understand how to connect SDK
+> - Review [AccountsProvider.tsx](./src/app/lib/wallets/AccountsProvider.tsx) to learn how to connect Polkadot wallets
 
 Now, you have everything you need. Feel free to use this template as is or as an example for your favorite framework. If you want to learn more about Polkadot NFTs, continue reading. Otherwise, happy coding!
 
 ## Polkadot NFTs and metadata 101
 
-In the Polkadot ecosystem, you don't have to deploy smart contracts to create NFTs. The `Asset Hub` chain is a special system L2 offers, `nfts pallet`, which is optimized for NFT use cases.
+You don't have to deploy smart contracts to create NFTs in the Polkadot ecosystem. The `Asset Hub` chain is a special system L2 that uses Substrate's `nfts pallet`, optimized for NFT use cases.
 
-We will see how easy it is to create an NFT collection using [tests](./src/tests/sdk.test.ts).
+To learn how easy it is to create an NFT collection, we will discover this project's [tests](./src/tests/sdk.test.ts).
 
 But first, let's configure our environment variables. At this point, you should have the `.env` file created. If not – create one using `.env.example` as a template. Set the following environment variables:
 
-- `PINATA_JWT` and `PINATA_GATEWAY`: there are two types of metadata in `nfts pallet` – on-chain and off-chain. We need to use third-party storage, typically IPFS, to store and manage off-chain metadata. Pinata is one of the leading providers of the IPFS service. Get your credentials for free on the [Pinata Cloud](https://pinata.cloud/). After registration, go to the [API keys section](https://app.pinata.cloud/developers/api-keys) and generate your API key. Save the JWT token and your gateway to the relevant environment variables.
-- `MNEMONIC`: This variable is only used for tests, and you can leave it `//Alice`, a special alias for development accounts. This account already has some predefined balance specified in [kusama-assethub.yml](./kusama-assethub.yml) for your local environment. You can also set your mnemonic seed phrase. Use [`polkadot{.js}`](https://polkadot.js.org/extension/) or any other wallet to generate a 12-word mnemonic secret phrase. Make sure this account has a non-zero balance.
+- `PINATA_JWT` and `PINATA_GATEWAY`: there are two types of metadata in `nfts pallet` – on-chain and off-chain. We must use third-party storage, typically IPFS, to store and manage off-chain metadata. Pinata is one of the leading providers of the IPFS service. Get your credentials for free on the [Pinata Cloud](https://pinata.cloud/). After registration, go to the [API keys section](https://app.pinata.cloud/developers/api-keys) and generate your API key. Save the JWT token and your gateway to the relevant environment variables.
+- `MNEMONIC`: This variable is only used for tests, and you can leave it `//Alice`, a special alias for development accounts. This account already has some predefined balance specified in [kusama-assethub.yml](./kusama-assethub.yml). You can also set your mnemonic seed phrase instead. Use [`polkadot{.js}`](https://polkadot.js.org/extension/) or any other wallet to generate a 12-word mnemonic secret phrase. Make sure this account has a non-zero balance.
 
 Now run the tests:
 
@@ -153,13 +153,13 @@ If everything was set correctly, you will see in your terminal:
       Tests  3 passed (3)
 ```
 
-> ![TIP]
-> Using VS Code, you may debug tests with breakpoints using [`vitest.explorer`](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) extension.
+> [!TIP]
+> Using VS Code, you may debug tests with breakpoints using [`vitest.explorer`](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) extension. This could be an easy way to learn about Asset Hub NFTs and SDK API.
 
 ### Creating collections and NFTs
 
-> ![NOTE]
-> The following guide explains the basics of NFTs and how to craft them with Unique SDK. You can also learn this by reviewing tests. If you feel comfortable with this approach – you will find them here: [src/tests/sdk.test.ts](./src/tests/sdk.test.ts)
+> [!NOTE]
+> The following guide explains the basics of NFTs and how to craft them with Unique SDK. You can also learn this by reviewing tests. If you feel comfortable with this approach – you will find them at [src/tests/sdk.test.ts](./src/tests/sdk.test.ts)
 
 To create your NFT collection on Asset Hub, you only need one call to RPC. Here is how to do this with Unique SDK.
 
@@ -210,7 +210,7 @@ However, what makes NFT valuable is the metadata associated with tokens. You now
 
 There are two types of metadata in the `nfts pallet` – on-chain and off-chain.
 
-On-chain metadata (attributes) is relatively easy to understand and use. Here is how you may set it with SDK:
+On-chain metadata consists of key/value pairs, making it relatively easy to understand and utilize. Here is how you may set it with SDK:
 
 ```ts
 await ah.nftsPallet.attributes.set({
@@ -220,7 +220,8 @@ await ah.nftsPallet.attributes.set({
 });
 ```
 
-<!-- TODO: explain namespace -->
+> [!NOTE]
+> We set itemOwner for the namespace, which means this attribute will be mutable for the NFT owner. You may learn more about possible attribute namespaces in the [official documentation](https://wiki.polkadot.network/docs/learn-nft-pallets#attributes)
 
 However, when it comes to off-chain metadata, you need to use third-party storage and APIs. The most popular one is IPFS, and Pinata is one of the leading providers of the IPFS service.
 
@@ -257,7 +258,7 @@ const {IpfsHash} = await pinata.upload.file(image);
 await pinata.upload.fileArray([image, ...]);
 ```
 
-Check your images uploaded successfully – navigate to https://ipfs.io/ipfs/<Your IPFS hash>. Or visit the Pinata account page.
+Check your images uploaded successfully – navigate to https://ipfs.io/ipfs/{...your IPFS hash}. Or visit the Pinata account page.
 
 Now, when we upload images, we need to prepare metadata JSON. We will use the metadata standard described in the [OpenSea documentation](https://docs.opensea.io/docs/metadata-standards).
 
@@ -301,3 +302,21 @@ await ah.nftsPallet.collection.setMetadata({
   ...
 })
 ```
+
+## Wrapping Up
+
+Congratulations! You've now set up a local NFT environment on Asset Hub, interacted with the Unique SDK, and explored NFT minting and metadata management.
+
+### Next Steps:
+- **Deep Dive into Asset Hub NFTs**  
+  Read the official Polkadot documentation:  
+  [Polkadot NFT Pallet](https://wiki.polkadot.network/docs/learn-nft-pallets)
+
+- **Explore More with Unique SDK**  
+  Check out the SDK’s full capabilities:  
+  [Unique SDK Documentation](https://docs.unique.network/)
+
+- **Experiment & Build**  
+  Use this template as a starting point to create your own NFT applications on Polkadot.
+
+Happy coding!
