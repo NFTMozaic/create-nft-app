@@ -1,10 +1,43 @@
 # The Asset Hub & Next.js template
 
-<!-- TODO: What you need to have: docker, node.js, knowledge -->
+Asset Hub is a specialized parachain within the Polkadot ecosystem designed for managing and transferring digital assets, including NFTs, without requiring smart contracts. It leverages Substrate's built-in `nfts pallet` to facilitate efficient and scalable NFT creation and management.
 
-<!-- TODO: what is Asset Hub -->
+# TL;DR
 
-<!-- TODO: TL;DR -->
+Ensure you have the following installed on your computer:
+
+- Node.js (latest LTS version recommended)
+- npm or yarn
+- Docker and Docker Compose
+- Git
+- A Substrate-compatible wallet (e.g., Polkadot.js extension)
+
+Then:
+
+1. Set up your environment 
+   1. Install dependencies (npm install)
+   2. Create a `.env` file using `.env.example`
+   3. Ensure Docker is installed
+2. Run the local blockchain & SDK
+
+```sh
+docker compose up
+```
+
+Test your local environment:
+- Local blockchain: https://polkadot.js.org/apps/?rpc=ws://localhost:8002#/accounts
+- SDK server: http://localhost:3333/documentation/static/index.html
+
+3. Learn how to mint NFTs with [tests](./src/tests/sdk.test.ts)
+
+4. Start the Next.js application
+
+```sh
+npm run dev
+```
+
+App runs on http://localhost:3000
+
 
 # Overview
 
