@@ -34,7 +34,9 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [wallets, setWallets] = useState<Wallet[]>([]);
-  const [accounts, setAccounts] = useState<Map<string, IPolkadotExtensionAccount>>(new Map());
+  const [accounts, setAccounts] = useState<
+    Map<string, IPolkadotExtensionAccount>
+  >(new Map());
   const [activeAccount, setActiveAccount] =
     useState<IPolkadotExtensionAccount | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +74,10 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = ({
               null;
             setActiveAccount(restoredAccount);
             if (restoredAccount)
-              localStorage.setItem("lastActiveAccount", restoredAccount.address);
+              localStorage.setItem(
+                "lastActiveAccount",
+                restoredAccount.address
+              );
           }
         }, 100);
 
@@ -95,9 +100,11 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = ({
           injectedWallets.wallets.find((w) => w.name === wallet.name)
         );
         setWallets(detectedWallets);
-        const lastConnectedWallet = localStorage.getItem("lastConnectedWallet") || undefined;
-        const lastActiveAccount = localStorage.getItem("lastActiveAccount") || undefined;
-        
+        const lastConnectedWallet =
+          localStorage.getItem("lastConnectedWallet") || undefined;
+        const lastActiveAccount =
+          localStorage.getItem("lastActiveAccount") || undefined;
+
         if (lastConnectedWallet) {
           await connectWallet(lastConnectedWallet, lastActiveAccount);
         }

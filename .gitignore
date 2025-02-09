@@ -41,4 +41,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-scripts/secret.ts
+.w3wallets
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

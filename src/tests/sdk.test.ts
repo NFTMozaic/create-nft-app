@@ -38,7 +38,10 @@ describe.sequential("Pallet nfts", () => {
 
     // 🐣 Step 4: Upload images to IPFS via Pinata
     console.log("🚀 Uploading images to IPFS...");
-    const imagesUpload = await pinata.upload.fileArray([coverImage, tokenImage]);
+    const imagesUpload = await pinata.upload.fileArray([
+      coverImage,
+      tokenImage,
+    ]);
     imagesIpfsHash = imagesUpload.IpfsHash;
     console.log(`✅ Images uploaded! IPFS Hash: ${imagesIpfsHash}`);
     console.log(
@@ -64,18 +67,29 @@ describe.sequential("Pallet nfts", () => {
 
     // 🐣 Step 6: Convert metadata objects to Blobs & Files
     console.log("📝 Converting metadata objects to JSON files...");
-    const collectionMetadataBlob = new Blob([JSON.stringify(collectionMetadata)], {
-      type: "application/json",
-    });
-    const collectionMetadataJson = new File([collectionMetadataBlob], "collection_metadata.json", {
-      type: "application/json",
-    });
+    const collectionMetadataBlob = new Blob(
+      [JSON.stringify(collectionMetadata)],
+      {
+        type: "application/json",
+      }
+    );
+    const collectionMetadataJson = new File(
+      [collectionMetadataBlob],
+      "collection_metadata.json",
+      {
+        type: "application/json",
+      }
+    );
     const tokenMetadataBlob = new Blob([JSON.stringify(nftMetadata)], {
       type: "application/json",
     });
-    const tokenMetadataJson = new File([tokenMetadataBlob], "token_metadata.json", {
-      type: "application/json",
-    });
+    const tokenMetadataJson = new File(
+      [tokenMetadataBlob],
+      "token_metadata.json",
+      {
+        type: "application/json",
+      }
+    );
 
     // 🐣 Step 7: Upload metadata JSON files to IPFS
     console.log("🚀 Uploading metadata JSON files to IPFS...");
@@ -96,7 +110,9 @@ describe.sequential("Pallet nfts", () => {
   test("Can create a collection and set collection's metadata", async () => {
     // Safety check to ensure we have IPFS hashes from the previous test
     if (!imagesIpfsHash || !metadataIpfsHash)
-      throw new Error("Collection metadata is not set. Run all tests in sequence.");
+      throw new Error(
+        "Collection metadata is not set. Run all tests in sequence."
+      );
 
     // 🐣 Step 1: Initialize the AssetHub SDK and account
     console.log("🟢 Initializing AssetHub SDK for collection creation...");
@@ -130,7 +146,9 @@ describe.sequential("Pallet nfts", () => {
 
     // 🐣 Step 5: Fetch collection info from the chain and verify
     console.log("🔎 Verifying collection metadata on-chain...");
-    const metadataOnchain = await ah.nftsPallet.collection.get({ collectionId });
+    const metadataOnchain = await ah.nftsPallet.collection.get({
+      collectionId,
+    });
     expect(metadataOnchain.metadata?.data).to.eq(collectionMetadataUri);
     console.log("✅ Collection metadata verified!");
   });

@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "fork": "npx @acala-network/chopsticks@latest --endpoint=wss://kusama-asset-hub-rpc.polkadot.io",
-    "test": "vitest"
+    "test": "vitest",
+    "test:e2e": "npx playwright test",
+    "prepare-e2e": "npx playwright install chromium && npx w3wallets polkadotJS"
   },
   "dependencies": {
     "@polkadot/extension-dapp": "^0.58.2",
@@ -23,6 +25,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.50.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^20",
@@ -35,7 +38,8 @@
     "jsdom": "^26.0.0",
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.3"
+    "vitest": "^3.0.3",
+    "w3wallets": "^0.2.2"
   },
   "packageManager": "yarn@1.22.22+sha256.c17d3797fb9a9115bf375e31bfd30058cac6bc9c3b8807a3d8cb2094794b51ca"
 }
