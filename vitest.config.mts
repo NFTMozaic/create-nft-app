@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [tsconfigPaths(), react()],
   test: {
     environment: 'node',
-    testTimeout: 5 * 60 * 1000
+    testTimeout: 5 * 60 * 1000,
+    include: ['./src/tests/*.test.ts']
   }
 })
