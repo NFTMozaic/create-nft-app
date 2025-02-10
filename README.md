@@ -1,3 +1,19 @@
+# Polkadot NFTMozaic Consensus Hong Kong 2025 Challenge
+
+Welcome to the Polkadot NFTMozaic bounty challenge. This challenge consists of a core challenge with a dedicated bounty split between a winner and a runner-up according to the prize distribution listed below and several additional bonus challenges, each providing additional prize allotments if successfully accomplished. The bonus prizes are available only to the winner and runner-up.
+
+>>>>> a note about time frames for each challenge
+>>>>> a note about EasyA involvement. Wait for EasyA to respons
+
+Your challenge is to create a simple UI that provides a means to create an NFT token on the Polkadot asset hub (collection, token).
+
+The presentable product of your efforts shoud be a working in-browser UI (dApp) that implements minting of an NFT of new or existing collection. This implies both a collection and token creation fields in the UI. 
+
+The goal of your challenge is, however, more relevant for the challenge evaluation. To accomplish the goal you should provide clean, practical, easy to read code that showcases how you implemented your solution. We want you to consider this challenge with thoughts of leaving behind instructions for a whole generation of coders who will ask themselves how to do exactly what you are trying to accomplish in this challenge. We intend to showcase your solution in a future NFTs on Asset Hub tutorials section if the solution is up to the standards. Give us yout best for posterity!
+
+For the backend you are free to chose any of the SDKs at your disposal which you might deem practical. We will be providing you with a tutorial below on how to accomplish this challenge with the Unique Network SDK which facilitates Asset Hub utilities in addition to the Unique's own parachain-specific functions. This is the fastest test-to-final cycle development evironment for the task you are given and is also the one in which we can provide the most detailed support. The other most practical options include PolkadotJS and PAPI. We do not have a dedicated environment setup available for these options and can give limited support and assistance for them.
+
+
 # The Asset Hub & Next.js template
 
 Asset Hub is a specialized parachain within the Polkadot ecosystem designed for managing and transferring digital assets, including NFTs, without requiring smart contracts. It leverages Substrate's built-in `nfts pallet` to facilitate efficient and scalable NFT creation and management.
