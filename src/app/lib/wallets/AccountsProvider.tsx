@@ -4,6 +4,7 @@ import React, {
   useEffect,
   ReactNode,
   useCallback,
+  useContext,
 } from "react";
 import {
   IPolkadotExtensionAccount,
@@ -149,3 +150,5 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = ({
     </AccountsContext.Provider>
   );
 };
+
+export const useAccountsContext = () => useContext(AccountsContext);

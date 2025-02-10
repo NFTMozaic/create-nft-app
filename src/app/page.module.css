@@ -6,3 +6,32 @@
   max-width: 600px;
   margin: 0 auto;
 }
+
+.formWrap {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+}
+
+.input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  width: 400px;
+  box-sizing: border-box;
+}
+
+.walletButton {
+  border: 1px solid #999;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  transition: border-color 0.2s;
+}
+
+.walletButton:hover {
+  border-color: #555;
+}

@@ -6,6 +6,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  useContext,
 } from "react";
 import { AssetHub, AssetHubInstance } from "@unique-nft/sdk";
 
@@ -23,13 +24,8 @@ export const UniqueSDKProvider = ({ children }: PropsWithChildren) => {
   const [sdk, setSdk] = useState<AssetHubInstance>();
 
   useEffect(() => {
-    const connect = async () => {
-      const sdk = AssetHub({
-        baseUrl,
-      });
-      setSdk(sdk);
-    };
-    connect();
+    const sdk = AssetHub({ baseUrl });
+    setSdk(sdk);
   }, []);
 
   return (
@@ -38,3 +34,6 @@ export const UniqueSDKProvider = ({ children }: PropsWithChildren) => {
     </UniqueSDKContext.Provider>
   );
 };
+
+
+export const useSdkContext = () => useContext(UniqueSDKContext);
