@@ -19,7 +19,7 @@ test("Can connect Polkadot{.js} wallet and transfer native tokens", async ({page
   await expect(page.getByRole('radio', {name: "Alice"})).toBeChecked();
   
   await page.getByPlaceholder("Recipient Address").fill(bobAddress);
-  await page.getByPlaceholder("Amount").fill("1000000000000");
+  await page.getByPlaceholder("Amount").fill("10");
   await page.getByRole('button', {name: "Send"}).click();
 
   await polkadotJS.enterPassword("111111")
