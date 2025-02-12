@@ -2,17 +2,47 @@
 
 Welcome to the Polkadot NFTMozaic bounty challenge. This challenge consists of a core challenge with a dedicated bounty split between a winner and a runner-up according to the prize distribution listed below and several additional bonus challenges, each providing additional prize allotments if successfully accomplished. The bonus prizes are available only to the winner and runner-up.
 
->>>>> a note about time frames for each challenge
->>>>> a note about EasyA involvement. Wait for EasyA to respons
+## Task challenge overview
 
-Your challenge is to create a simple UI that provides a means to create an NFT token on the Polkadot asset hub (collection, token).
+Your challenge is to create a simple UI that provides a means to create an NFT asset (collection, token) on the Polkadot Asset Hub. The challenge consists of a core component and two optional challenges.
 
-The presentable product of your efforts shoud be a working in-browser UI (dApp) that implements minting of an NFT of new or existing collection. This implies both a collection and token creation fields in the UI. 
+## Task components 
 
-The goal of your challenge is, however, more relevant for the challenge evaluation. To accomplish the goal you should provide clean, practical, easy to read code that showcases how you implemented your solution. We want you to consider this challenge with thoughts of leaving behind instructions for a whole generation of coders who will ask themselves how to do exactly what you are trying to accomplish in this challenge. We intend to showcase your solution in a future NFTs on Asset Hub tutorials section if the solution is up to the standards. Give us yout best for posterity!
+### Core challenge
 
-For the backend you are free to chose any of the SDKs at your disposal which you might deem practical. We will be providing you with a tutorial below on how to accomplish this challenge with the Unique Network SDK which facilitates Asset Hub utilities in addition to the Unique's own parachain-specific functions. This is the fastest test-to-final cycle development evironment for the task you are given and is also the one in which we can provide the most detailed support. The other most practical options include PolkadotJS and PAPI. We do not have a dedicated environment setup available for these options and can give limited support and assistance for them.
+This core challenge is to create a simple UI that allows a user to define a collection, mint one or more tokens of that collection and list and display the minted tokens on a page.
 
+### Optional challenges
+
+1. Using the [Opensea metadata format](https://docs.opensea.io/docs/metadata-standards) supported by the Asset Hub NFTs pallet, provide the user an opportunity to add an audio file and a description as token's extended digital assets in addition to the base image. Provide a way to display these additional assets in the browser.
+
+2. Provide a 'Sell' button to promote a token into a sellable item and a 'Buy' button that allows a user logged in via a Polkadot wallet to purchase the token.
+
+# Judgement criteria
+
+The **presentable result** of your efforts should be a working in-browser UI (dApp) that implements minting of an NFT of new or existing collection. This implies an availability of both a collection and token creation fields and buttons in the UI as well as the additional elements that might be needed as a part of the optional challenges if you choose to implement them.
+
+The **goal** of your challenge is, however, more relevant for the challenge evaluation. To accomplish the goal you should provide clean, practical to implement, easy to read and replicate code that showcases how you implemented your solution. 
+
+For the frontend you are free to choose any framework you are comfortable with. You can use, vanilla JS/TS, React, Angular, Vue.js, Svelte, Solid.js, qwik, Astro. No restrictions.
+
+For the backend you are free to chose any of the SDKs at your disposal which you might deem practical. We will be providing you with a tutorial below on how to accomplish this challenge with the Unique Network SDK which facilitates Asset Hub utilities in addition to the Unique's own parachain-specific functions. This approach provides, possibly the fastest time-to-completion cycle development environment for the task you are given and is also the one in which we can provide the most detailed support. We are providing comprehensive instructions below with everything you need to complete the task. The other most practical options include PolkadotJS and PAPI. We do not have a dedicated environment setup available for these options and can give limited support and assistance for them but you are free to choose them for your task.
+
+We want you to consider this challenge with thoughts of leaving behind instructions for a whole generation of coders who will ask themselves how to do exactly what you are trying to accomplish in this challenge. We intend to showcase your solution in a future NFTs on Asset Hub tutorials section. Give us your best effort for posterity!
+
+Your solution will be judged on two points:
+
+- whether or not it has successfully accomplished the set task.
+- how presentable is your code as a tutorial for a developer looking to replicate your efforts.
+
+# The bounty awards structure
+
+- A winning solution and a runner-up will be chosen based on the judgment criteria.
+- A winning solution will receive a bounty of $1000 worth of stablecoins for successfully completing the core task.
+- The runner-up will receive a bounty of $500 worth of stablecoins for successfully completing the core task..
+- An additional bounty will be added to both the winner's and the runner's-up core bounty of they choose to pursue and succeed in successfully completing each optional challenge.
+- For the FIRST optional challenge, $200 worth of stablecoins will be added to the award amount for its successful completion.
+- For the SECOND optional challenge, $300 worth of stablecoins will be added to the award amount for its successful completion.
 
 # The Asset Hub & Next.js template
 
