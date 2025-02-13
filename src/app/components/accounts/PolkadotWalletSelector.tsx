@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useContext } from "react";
-import { AccountsContext } from "@/app/lib/wallets/AccountsProvider";
+import React from "react";
+import { useAccountsContext } from "@/app/lib/wallets/AccountsProvider";
 import { KNOWN_WALLETS, shortPolkadotAddress } from "@/app/lib/utils";
 import styles from "./PolkadotWalletSelector.module.css";
 
 const PolkadotWalletSelector: React.FC = () => {
-  const accountsContext = useContext(AccountsContext);
+  const accountsContext = useAccountsContext();
 
   if (!accountsContext) {
     return <div className={styles.pdwContainer}>Loading...</div>;

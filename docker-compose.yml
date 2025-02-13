@@ -24,7 +24,7 @@ services:
       - CHAIN=ws://assethub-chopsticks:8002
       - MIN_LOG_LEVEL=info
       - EXTRINSIC_MORTAL_BLOCK_LENGTH=32
-      - OPENAPI_SERVER_URL=http://localhost:3002
+      - OPENAPI_SERVER_URL=http://localhost:3333
       - OPENAPI_SERVER_DESCRIPTION="Local development server"
       - EXTRINSICS_STORAGE_MAX_BLOCKS_COUNT=100
     restart: always
