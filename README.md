@@ -1,5 +1,7 @@
 # Polkadot NFTMozaic Consensus Hong Kong 2025 Challenge
 
+Welcome to the Polkadot NFTMozaic bounty challenge. This challenge consists of a core challenge with a dedicated bounty split between a winner and a runner-up according to the prize distribution listed below and several additional bonus challenges, each providing additional prize allotments if successfully accomplished. The bonus prizes are available only to the winner and runner-up.
+
 - [Polkadot NFTMozaic Consensus Hong Kong 2025 Challenge](#polkadot-nftmozaic-consensus-hong-kong-2025-challenge)
   - [Task challenge overview](#task-challenge-overview)
   - [Task components](#task-components)
@@ -8,8 +10,8 @@
 - [Judgement criteria](#judgement-criteria)
 - [The bounty awards structure](#the-bounty-awards-structure)
 - [The Asset Hub \& Next.js template](#the-asset-hub--nextjs-template)
-- [TL;DR](#tldr)
-- [Intro](#intro)
+  - [TL;DR](#tldr)
+  - [Intro](#intro)
   - [Main components overview](#main-components-overview)
     - [1. The Asset Hub node](#1-the-asset-hub-node)
     - [2. Unique SDK](#2-unique-sdk)
@@ -20,9 +22,6 @@
     - [Metadata](#metadata)
   - [Wrapping Up](#wrapping-up)
     - [Next Steps](#next-steps)
-
-
-Welcome to the Polkadot NFTMozaic bounty challenge. This challenge consists of a core challenge with a dedicated bounty split between a winner and a runner-up according to the prize distribution listed below and several additional bonus challenges, each providing additional prize allotments if successfully accomplished. The bonus prizes are available only to the winner and runner-up.
 
 ## Task challenge overview
 
@@ -70,7 +69,7 @@ Your solution will be judged on two points:
 
 Asset Hub is a specialized parachain within the Polkadot ecosystem designed for managing and transferring digital assets, including NFTs, without requiring smart contracts. It leverages Substrate's built-in `nfts pallet` to facilitate efficient and scalable NFT creation and management.
 
-# TL;DR
+## TL;DR
 
 Ensure you have the following installed on your computer:
 
@@ -105,7 +104,7 @@ npm run dev
 App runs on http://localhost:3000.
 
 
-# Intro
+## Intro
 
 This template aims to bootstrap an NFT application on `Asset Hub by Polkadot`. It utilizes [`@unique-nft/sdk`](https://www.npmjs.com/package/@unique-nft/sdk) for seamless blockchain interactions.
 
