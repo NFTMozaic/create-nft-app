@@ -69,6 +69,19 @@ Your solution will be judged on two points:
 
 Asset Hub is a specialized parachain within the Polkadot ecosystem designed for managing and transferring digital assets, including NFTs, without requiring smart contracts. It leverages Substrate's built-in `nfts pallet` to facilitate efficient and scalable NFT creation and management.
 
+- [TL;DR](#tldr)
+- [Intro](#intro)
+- [Main components overview](#main-components-overview)
+  - [1. The Asset Hub node](#1-the-asset-hub-node)
+  - [2. Unique SDK](#2-unique-sdk)
+  - [Running local Asset Hub node \& SDK](#running-local-asset-hub-node--sdk)
+  - [Running Next.js application](#running-nextjs-application)
+- [Polkadot NFTs and metadata 101](#polkadot-nfts-and-metadata-101)
+  - [Creating collections and NFTs](#creating-collections-and-nfts)
+  - [Metadata](#metadata)
+- [Wrapping Up](#wrapping-up)
+  - [Next Steps](#next-steps)
+
 ## TL;DR
 
 Ensure you have the following installed on your computer:
