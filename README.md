@@ -116,14 +116,10 @@ npm run dev
 
 App runs on http://localhost:3000.
 
-<a href="https://youtu.be/Mjl5jRoCIYs" target="_blank" style="position: relative; display: inline-block;">
-  <img src="https://img.youtube.com/vi/Mjl5jRoCIYs/maxresdefault.jpg" 
-       alt="Watch the video" 
-       style="width: 100%; max-width: 600px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-  <img src="./public/play.png"
-       alt="Play Button"
-       style="width: 90px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.8;">
-</a>
+---
+**Alternatively, watch the video:**
+
+[![Watch the video](https://img.youtube.com/vi/Mjl5jRoCIYs/maxresdefault.jpg)](https://youtu.be/Mjl5jRoCIYs)
 
 ## Intro
 
