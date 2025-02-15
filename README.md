@@ -117,7 +117,7 @@ npm run dev
 App runs on http://localhost:3000.
 
 ---
-**Alternatively, watch the video:**
+**Alternatively, watch this video on YouTube:**
 
 [![Watch the video](https://img.youtube.com/vi/Mjl5jRoCIYs/maxresdefault.jpg)](https://youtu.be/Mjl5jRoCIYs)
 
