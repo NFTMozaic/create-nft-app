@@ -56,6 +56,8 @@ Your solution will be judged on two points:
 - whether or not it has successfully accomplished the set task.
 - how presentable is your code as a tutorial for a developer looking to replicate your efforts.
 
+If you choose to use the Unique SDK as your development tool we are also kindly asking you you submit your notes on your experience in usting it. Was it easy to adopt the methods used? Did it help you work faster? Anything that might help make it even better? Please send us your notes to ff@unique.network. Your submission will be greatly valued and will hopefully make the SDK even better.
+
 # The bounty awards structure
 
 - A winning solution and a runner-up will be chosen based on the judgment criteria.
