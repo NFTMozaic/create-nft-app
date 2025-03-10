@@ -1,10 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import PolkadotWalletSelector from "@/app/components/accounts/PolkadotWalletSelector";
 import styles from "./page.module.css";
-import { useSdkContext } from "./lib/sdk/UniqueSDKProvider";
-import { useAccountsContext } from "./lib/wallets/AccountsProvider";
+import { useAccountsContext, useSdkContext } from "@/context";
 
 const DEFAULT_DECIMALS = 18;
 
@@ -15,18 +14,24 @@ export default function Home() {
   const [toAddress, setToAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [transactionSent, setTransactionSent] = useState(false);
-  const [transactionSuccess, setTransactionSuccess] = useState<boolean | undefined>(undefined);
+  const [transactionSuccess, setTransactionSuccess] = useState<
+    boolean | undefined
+  >(undefined);
   const [decimals, setDecimals] = useState<number>(DEFAULT_DECIMALS);
 
   const getBalance = useCallback(async () => {
     if (!sdk || !accountContext?.activeAccount) return;
 
-    const bal = await sdk.balance.get({
-      address: accountContext.activeAccount.address,
-    });
-
-    setBalance(bal.available);
-    setDecimals(bal.decimals);
+    try {
+      const bal = await sdk.balance.get({
+        address: accountContext.activeAccount.address,
+      });
+      setBalance(bal.available);
+      setDecimals(bal.decimals);
+    } catch (error) {
+      console.error("Failed to fetch balance:", error);
+      setBalance("0");
+    }
   }, [accountContext?.activeAccount, sdk]);
 
   useEffect(() => {
@@ -40,7 +45,7 @@ export default function Home() {
     try {
       setTransactionSent(true);
       const amountInWei = BigInt(
-        amount.replace(".", "").padEnd(amount.split(".")[0].length + decimals, "0")
+        Math.floor(parseFloat(amount) * 10 ** decimals)
       );
 
       await sdk.balance.transfer(
@@ -69,16 +74,19 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [transactionSuccess]);
 
-  const formattedBalance = balance
-    ? (() => {
-        try {
-          const num = BigInt(balance).toString().padStart(decimals + 1, "0");
-          return decimals ? `${num.slice(0, -decimals)}.${num.slice(-decimals)}` : num;
-        } catch {
-          return '';
-        }
-      })()
-    : '...';
+  const formattedBalance = useMemo(() => {
+    if (!balance) return "...";
+    try {
+      const num = BigInt(balance)
+        .toString()
+        .padStart(decimals + 1, "0");
+      return decimals
+        ? `${num.slice(0, -decimals)}.${num.slice(-decimals)}`
+        : num;
+    } catch {
+      return "";
+    }
+  }, [balance, decimals]);
 
   return (
     <div className={styles.page}>
