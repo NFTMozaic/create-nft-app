@@ -10,11 +10,14 @@ Welcome to this step-by-step tutorial on building an NFT application on Polkadot
 
 This tutorial is designed for developers who want to dive into NFT development on Polkadot's Asset Hub.
 
+> [!NOTE]
+> This tutorial uses `next.js` as one of the most widely used frontend frameworks. However, using the provided examples in any different framework should not be a challenge.
+
 ## Install and Set Up the Polkadot.js Wallet
 
 Since this application interacts with Polkadot's Asset Hub, you need the Polkadot wallet to sign transactions and manage accounts.
 
-1️. Install the `Polkadot.js` Extension: https://polkadot.js.org/extension/
+1. Install the `Polkadot.js` Extension: https://polkadot.js.org/extension/
 2. Open the extension and create a new wallet or import an existing one using a seed phrase.
 
 ## Let's Start Building!
