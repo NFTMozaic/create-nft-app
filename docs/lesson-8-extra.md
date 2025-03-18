@@ -32,7 +32,7 @@ Currently, users must manually enter a metadata URL when minting an NFT. Instead
 
 Use `sdk.nftsPallet.item.transfer` method.
 
-## 5. Turn your application into the marketplace
+## 5. Turn your application into a marketplace
 
 `nfts` pallet has built-in support for NFT trading.
 

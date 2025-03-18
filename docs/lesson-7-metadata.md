@@ -1,6 +1,7 @@
 # Lesson 7: Setting metadata
 
-> [!NOTE] This lesson does not cover how to create and store metadata files.
+> [!NOTE] 
+> This lesson does not cover how to create and store metadata files.
 > 
 > You can use services like Pinata to upload JSON metadata to IPFS.
 >

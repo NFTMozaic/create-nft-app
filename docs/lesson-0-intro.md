@@ -2,11 +2,11 @@
 
 Welcome to this step-by-step tutorial on building an NFT application on Polkadot's Asset Hub using Next.js and the Unique SDK. By the end of this tutorial, you'll have a working application where users can:
 
-✅ Connect a Polkadot wallet using the Polkadot.js extension.
-✅ Create NFT collections on Asset Hub.
-✅ Mint NFTs with metadata.
-✅ Fetch and display NFTs owned by a wallet.
-✅ Use metadata standards to store NFT attributes on IPFS.
+- ✅ Connect a Polkadot wallet using the Polkadot.js extension.
+- ✅ Create NFT collections on Asset Hub.
+- ✅ Mint NFTs with metadata.
+- ✅ Fetch and display NFTs owned by a wallet.
+- ✅ Use metadata standards to store NFT attributes on IPFS.
 
 This tutorial is designed for developers who want to dive into NFT development on Polkadot's Asset Hub.
 
