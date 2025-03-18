@@ -139,7 +139,10 @@ const PolkadotWalletSelector: React.FC = () => {
       {activeAccount && (
         <div className="mt-6 w-full p-4 bg-gray-100 rounded-lg text-center">
           <h3 className="text-md font-medium text-gray-700">Connected Account</h3>
-          <p className="text-gray-600">{activeAccount.name || activeAccount.address}</p>
+          <p className="text-gray-600">{activeAccount.name}</p>
+          <p className="text-gray-600">
+           {activeAccount.address && activeAccount.address.slice(0, 6)}...${activeAccount.address.slice(-4)}
+          </p>
         </div>
       )}
     </div>
