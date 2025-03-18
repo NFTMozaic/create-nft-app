@@ -94,7 +94,7 @@ const TokenCreationForm = () => {
       </button>
 
       {status && (
-        <p className="mt-4 text-sm text-gray-800 text-center">{status}</p>
+        <p className="mt-4 text-sm text-gray-800 text-center break-all">{status}</p>
       )}
     </div>
   );
@@ -214,7 +214,7 @@ const NFTItem = () => {
         Fetch NFT
       </button>
 
-      {status && <p className="mt-4 text-sm text-gray-800 text-center">{status}</p>}
+      {status && <p className="mt-4 text-sm text-gray-800 text-center break-all">{status}</p>}
 
       {nft && (
         <div className="mt-6 w-full p-4 bg-gray-100 rounded-lg text-center">
@@ -240,7 +240,7 @@ Since Asset Hub does not provide an indexer to fetch all NFTs owned by an accoun
 
 ## 3. Integrating components
 
-Add components to your homepage:
+Add components to your homepage `app/page.tsx`:
 
 ```ts
 "use client";

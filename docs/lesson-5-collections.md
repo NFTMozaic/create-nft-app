@@ -69,7 +69,7 @@ const CollectionCreationForm = () => {
         Create Collection
       </button>
 
-      {status && <p className="mt-4 text-sm text-gray-700 text-center">{status}</p>}
+      {status && <p className="mt-4 text-sm text-gray-700 text-center break-all">{status}</p>}
     </div>
   );
 };
@@ -154,7 +154,7 @@ It accesses the `sdk` instance and `activeAccount` from their respective context
 
 ## 3. Integrating components
 
-To integrate collection management features, add the `CollectionCreationForm` and `CollectionList` components to your homepage.
+To integrate collection management features, add the `CollectionCreationForm` and `CollectionList` components to your homepage. Update `app/page.tsx`:
 
 ```ts
 "use client";

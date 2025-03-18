@@ -7,7 +7,7 @@ Now that you've built the core functionality of your NFT application, here are s
 Right now, your app only supports the `Polkadot.js` wallet. Expand it to support multiple wallets. Here are a few ways:
 
 1. Accept wallet name as a parameter instead of hardcoding `polkadot-js`.
-2. Use a third-party library like `@talismn/connect-wallets` to support wallets like Talisman, SubWallet, and Nova Wallet.
+2. Use a third-party library like `@talismn/connect-wallets` to support wallets like Talisman, SubWallet, Nova Wallet etc.
 3. Provide a way to choose an active account instead of setting the first one.
    
 ### Improve `PolkadotWalletSelector` component

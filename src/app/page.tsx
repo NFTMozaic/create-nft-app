@@ -51,9 +51,7 @@ export default function Home() {
       await sdk.balance.transfer(
         { to: toAddress, amount: amountInWei.toString() },
         { signerAddress: account.address },
-        // TODO: update @unique-nft/utils
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        { signer: account.signer as any }
+        account
       );
       setTransactionSuccess(true);
     } catch {
