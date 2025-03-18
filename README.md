@@ -399,7 +399,7 @@ Congratulations! You've now set up a local NFT environment on Asset Hub, interac
   [Polkadot NFT Pallet](https://wiki.polkadot.network/docs/learn-nft-pallets)
 
 - **Explore More with Unique SDK**  
-  Check out the SDK’s full capabilities:  
+  Check out the SDK's full capabilities:  
   [Unique SDK Documentation](https://docs.unique.network/)
 
 - **Experiment & Build**  

@@ -1,6 +1,6 @@
 # 📦 Lesson 6: Integrating Pinata for IPFS Storage
 
-In this lesson, you’ll integrate Pinata into your Next.js application for handling IPFS file uploads and metadata storage. You’ll set up a Pinata context, API routes, and a server-side utility for managing interactions with Pinata.
+In this lesson, you'll integrate Pinata into your Next.js application for handling IPFS file uploads and metadata storage. You'll set up a Pinata context, API routes, and a server-side utility for managing interactions with Pinata.
 
 ## 1. What is Pinata & Why Use It?
 
@@ -33,8 +33,8 @@ export async function getPinataInstance() {
   }
 
   return new PinataSDK({
-    pinataJwt: process.env.PINATA_JWT,
-    pinataGateway: process.env.NEXT_PUBLIC_PINATA_GATEWAY,
+    pinataJwt: process.env.PINATA_JWT!,
+    pinataGateway: process.env.NEXT_PUBLIC_PINATA_GATEWAY!,
   });
 }
 ```
@@ -48,17 +48,17 @@ routes.
 
 
 
-### File Upload API Route
+### Image Upload API Route
 
 This route lets users upload image files to Pinata and returns the IPFS URL.
 
-Create a new file: `app/api/files/route.ts`.
+Create a new file: `app/api/image/route.ts`.
 
 Paste the following code:
 
 ```ts
+import { getPinataInstance } from "@/lib/pinata";
 import { NextResponse, type NextRequest } from "next/server";
-import { getPinataInstance } from "../../../lib/pinata";
 
 export async function POST(request: NextRequest) {
   try {
@@ -79,6 +79,8 @@ export async function POST(request: NextRequest) {
 }
 ```
 
+<!-- TODO briefly explain -->
+
 ### Metadata Upload API Route
 
 This route lets users upload metadata JSON (name, description, image link) to Pinata.
@@ -88,21 +90,18 @@ Create a new file: `app/api/metadata/route.ts`.
 Paste this code:
 
 ```ts
+import { getPinataInstance } from "@/lib/pinata";
 import { NextResponse, type NextRequest } from "next/server";
-import { getPinataInstance } from "../../../lib/pinata";
 
 export async function POST(request: NextRequest) {
   try {
-    // Initialize Pinata SDK
     const pinata = await getPinataInstance();
     const metadata = await request.json();
 
-    // Validate metadata fields
     if (!metadata.name || !metadata.description || !metadata.image) {
       return NextResponse.json({ error: "Missing required metadata fields" }, { status: 400 });
     }
     
-    // Upload metadata JSON to Pinata
     const uploadData = await pinata.upload.json(metadata);
     const url = await pinata.gateways.convert(uploadData.IpfsHash);
 
@@ -113,9 +112,40 @@ export async function POST(request: NextRequest) {
 }
 ```
 
-## 3. Setting Up the Pinata Context
+<!-- TODO: come up with a better title: -->
+## 3. Describe metadata
 
-We’ll create a Pinata Context to centralize IPFS operations, making it easier to upload files, store metadata, and fetch NFT details.
+<!-- TODO: fix english and explain better -->
+
+We will use OpenSea compatible metadata format described:
+
+- here for NFTs: https://docs.opensea.io/docs/metadata-standards
+- here for collections: https://docs.opensea.io/docs/contract-level-metadata
+
+Let's create interfaces which define our feauture metadata. Create `lib/types.ts` file:
+
+```ts
+// This simplified metadata will be used for collections
+export interface BasicMetadata {
+  name: string;
+  description: string;
+  image: string;
+}
+
+// For NFTs we will use an extra array with token attributes
+export interface NFTMetadata extends BasicMetadata {
+  attributes: [
+    {
+      trait_type: string;
+      value: string;
+    }
+  ];
+}
+```
+
+## 4. Setting Up the Pinata Context
+
+We'll create a Pinata Context to centralize IPFS operations, making it easier to upload files, store metadata, and fetch NFT details.
 
 Create a new file: `context/PinataContext.tsx`.
 
@@ -124,28 +154,11 @@ Paste this code inside:
 ```ts
 'use client';
 
+import { BasicMetadata, NFTMetadata } from "@/lib/types";
 import React, { createContext, useCallback, useContext, useMemo } from "react";
 
-interface BasicMetadata {
-  name: string,
-  description: string,
-  image: string,
-}
-
-interface NFTMetadata extends BasicMetadata {
-  name: string,
-  description: string,
-  image: string,
-  attributes: [
-    {
-      trait_type: string,
-      value: string
-    }
-  ]
-}
-
 interface PinataContextType {
-  uploadFile: (file: File) => Promise<string | null>;
+  uploadImage: (file: File) => Promise<string | null>;
   uploadMetadata: (metadata: BasicMetadata) => Promise<string | null>;
   fetchCollectionMetadata: (url: string) => Promise<BasicMetadata | null>;
   fetchNFTMetadata: (url: string) => Promise<NFTMetadata | null>;
@@ -154,12 +167,12 @@ interface PinataContextType {
 const PinataContext = createContext<PinataContextType | undefined>(undefined);
 
 export const PinataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const uploadFile = useCallback(async (file: File): Promise<string | null> => {
+  const uploadImage = useCallback(async (file: File): Promise<string | null> => {
     try {
       const data = new FormData();
       data.set("file", file);
 
-      const uploadRequest = await fetch("/api/files", {
+      const uploadRequest = await fetch("/api/image", {
         method: "POST",
         body: data,
       });
@@ -190,6 +203,7 @@ export const PinataProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const fetchMetadata = useCallback(async <T extends BasicMetadata>(url: string): Promise<T | null> => {
     try {
+      console.log("FETCHING", url);
       const response = await fetch(url);
       if (!response.ok) throw new Error("Failed to fetch metadata");
 
@@ -204,18 +218,18 @@ export const PinataProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const fetchNFTMetadata = useCallback((url: string) => fetchMetadata<NFTMetadata>(url), [fetchMetadata]);
 
   const contextValue = useMemo(() => ({
-    uploadFile,
+    uploadImage,
     uploadMetadata,
     fetchCollectionMetadata,
     fetchNFTMetadata,
-  }), [uploadFile, uploadMetadata, fetchCollectionMetadata, fetchNFTMetadata]);
+  }), [uploadImage, uploadMetadata, fetchCollectionMetadata, fetchNFTMetadata]);
 
   return <PinataContext.Provider value={contextValue}>{children}</PinataContext.Provider>;
 };
 
 export const usePinata = (): PinataContextType => {
   return useContext(PinataContext) || {
-    uploadFile: async () => null,
+    uploadImage: async () => null,
     uploadMetadata: async () => null,
     fetchCollectionMetadata: async () => null,
     fetchNFTMetadata: async () => null,
@@ -223,7 +237,9 @@ export const usePinata = (): PinataContextType => {
 };
 ```
 
-## 4. Integrating Pinata Provider
+<!-- TODO briefly explain -->
+
+## 5. Integrating Pinata Provider
 
 Now, wrap your app in PinataProvider so all components can access the upload functions.
 
@@ -246,15 +262,41 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <PinataProvider>
-          <UniqueSDKProvider>
-            <AccountsProvider>{children}</AccountsProvider>
-          </UniqueSDKProvider>
+          <AccountsProvider>
+            <UniqueSDKProvider>{children}</UniqueSDKProvider>
+          </AccountsProvider>
         </PinataProvider>
       </body>
     </html>
   );
 }
 ```
+
+## 6. Configure Next.js
+
+<!-- TODO: explain better -->
+
+By default next.js cannot work with external urls because ...
+
+Configure next to work with pinata, edit `next.config.ts`:
+
+```ts
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.mypinata.cloud",
+      },
+    ],
+  },
+};
+
+export default nextConfig;
+```
+
 
 ## ✅ Final Overview
 

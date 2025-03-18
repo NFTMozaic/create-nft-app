@@ -25,7 +25,7 @@ We must use third-party storage, typically IPFS, to store and manage off-chain m
 
 Your Next.js app requires certain sensitive data, such as API endpoints and credentials, to interact securely with Asset Hub and Pinata. For this, you'll use environment variables.
 
-In the root of your project (nft-asset-hub), create a new file named `.env` and add the following content:
+In the root of your project (nft-asset-hub), create a new file named `.env` and add the following variables:
 
 ```
 NEXT_PUBLIC_REST_URL=https://rest.unique.network/v2/paseo-asset-hub

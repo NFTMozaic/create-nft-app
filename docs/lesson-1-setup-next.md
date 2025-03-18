@@ -1,4 +1,4 @@
-# 🎯 Lesson 1: Setting Up a Next.js Project for NFT Development
+# 🎯 Lesson 1: Setting Up a Next.js Project
 
 In this first lesson, you'll learn how to set up a basic Next.js project that will serve as the foundation for building your NFT application on Polkadot's Asset Hub.
 
@@ -15,11 +15,11 @@ npx create-next-app@latest nft-asset-hub --use-npm --typescript
 ```
 
 > [!IMPORTANT]
-> You will be asked a few question that will define your project structure and dependencies. You are free to chose whatever configuration you like. However, if you want to to follow the structure of this tutorial answer:
+> You will be asked a few questions that will define your project structure and dependencies. You are free to choose any configuration you like. However, if you want to follow the structure of this tutorial, answer as follows:
 > - Would you like to use Tailwind CSS?: `Yes`
 > - Would you like your code inside a `src/` directory: `No`
 > - Would you like to use App Router? (recommended): `Yes`
-> - Would you like to customize the import alias: `No`
+> - Would you like to customize the import alias: `Yes`
 
 This command will:
 
@@ -67,4 +67,6 @@ Brief Explanation:
 - `app` directory is used for routing and page components.
 - `public` directory holds static files like images.
 - `components` and `context` directories will be created later for reusable components and context providers.
-- `next.config.mjs` is for custom Next.js configurations.
+- `next.config.ts` is for custom Next.js configurations.
+
+### [➡️ Next lesson: Configuring Environment Variables](./lesson-2-setup-env.md)
