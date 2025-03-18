@@ -1,6 +1,7 @@
 # Lesson 7: Setting metadata
 
 > [!NOTE] This lesson does not cover how to create and store metadata files.
+> 
 > You can use services like Pinata to upload JSON metadata to IPFS.
 >
 > To keep this tutorial focused, we have already prepared a metadata file following OpenSea's Metadata Standard. You can view and use the example metadata here: https://orange-impressed-bonobo-853.mypinata.cloud/ipfs/bafkreigqw6s6se5plrn6hzxiw2ve42lczzyfi4brdrvad26vlh57fnwaai
