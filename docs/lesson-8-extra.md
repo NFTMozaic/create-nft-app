@@ -28,11 +28,28 @@ Currently, users must manually enter a metadata URL when minting an NFT. Instead
 1. Use the [Pinata API](https://docs.pinata.cloud/quickstart) to upload JSON metadata automatically.
 2. Modify your `TokenCreationForm` and `CollectionCreationForm` components to give the user the ability to attach an image and set metadata such as name, description and attributes.
 
-## 4. Add NFT transfers
+## 4. Batch transactions
+
+When creating an NFT, you need to sign two transactions, which is not the best experience. Instead, you may combine these transactions in a batch.
+
+Here is an example of how it can be done with Unique SDK:
+
+```ts
+const createInBatch = await sdk.utility.batchAll([
+  sdk.nftsPallet.item.mint.build({
+    ...
+  }),
+  sdk.nftsPallet.item.setMetadata.build({
+    ...
+  })
+]);
+```
+
+## 5. Add NFT transfers
 
 Use `sdk.nftsPallet.item.transfer` method.
 
-## 5. Turn your application into a marketplace
+## 6. Turn your application into a marketplace
 
 `nfts` pallet has built-in support for NFT trading.
 

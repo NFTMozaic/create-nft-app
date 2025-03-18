@@ -116,7 +116,8 @@ If successful, the component updates the status to display the new NFT's ID. If 
 
 ## 2. Create NFTItem component
 
-> [!NOTE] This lesson provides a simplified version of fetching NFT details.
+> [!NOTE] 
+> This lesson provides a simplified version of fetching NFT details.
 >  To retrieve all NFTs owned by a user, an indexer is required because there is no efficient way to query all NFTs across multiple collections directly from the blockchain. You can use indexer by [Koda](https://github.com/kodadot/stick/tree/main/src) to fetch and display all NFTs owned by an account.
 
 
@@ -271,8 +272,8 @@ export default function Home() {
 
 Steps to Verify:
 - Connect your wallet using the Wallet Selector.
-- Click "Create Collection" - watch for updates in the status field.
-- Check the console for transaction details.
+- Create an NFT using one of the previously created collection
+- Query your newly created token
 
 ## 🚀 Next Steps
 🎉 At this moment, your collections and NFTs are just a shell. What makes NFTs valuable is associated metadata. In the following lesson, we will learn how to add some to your NFTs.

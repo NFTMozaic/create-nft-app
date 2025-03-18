@@ -93,6 +93,13 @@ return (
 )}
 ```
 
+## 🧪 Testing the Component
+
+Steps to Verify:
+- Create a new NFT with metadata. You will be asked to sign two transactions – one for NFT creation and one for setting NFT's metadata
+- Query your newly created NFT
+
+
 ## The final code
 
 <details> 

@@ -13,7 +13,7 @@ Before minting NFTs, we need a collection to store them. This component will:
 
 Create a new file: `components/CollectionCreationForm.tsx`
 
-> ![NOTE]
+> [!NOTE]
 > This form provides a minimal example of creating an NFT collection. In future lessons, we'll cover how to add metadata, customize attributes, and configure collection-level settings.
 
 Paste this code:
