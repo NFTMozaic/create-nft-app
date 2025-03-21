@@ -13,6 +13,9 @@ This tutorial is designed for developers who want to dive into NFT development o
 > [!NOTE]
 > This tutorial uses `next.js` as one of the most widely used frontend frameworks. However, using the provided examples in any different framework should not be a challenge.
 
+> [!IMPORTANT]
+> This tutorial focuses on creating collections and NFTs on Asset Hub. While it touches on related tools like IPFS and indexers, it does not cover them in depth. However, helpful links and resources will be provided for those who want to explore these topics further.
+
 ## Install and Set Up the Polkadot.js Wallet
 
 Since this application interacts with Polkadot's Asset Hub, you need the Polkadot wallet to sign transactions and manage accounts.

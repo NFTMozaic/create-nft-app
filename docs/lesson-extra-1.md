@@ -55,3 +55,5 @@ Use `sdk.nftsPallet.item.transfer` method.
 
 - Check and implement the SDK methods under `sdk.nftsPallet.trade`
 - Add UI to put NFTs on sale and buy them
+
+### [➡️ Extra: how to work with Pinata](./lesson-extra-2.md)

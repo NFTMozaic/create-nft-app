@@ -341,4 +341,5 @@ export default NFTItem;
 
 </details> 
 
-### [➡️ Next lesson: Extra Challenges](./lesson-8-extra.md)
+### [➡️ Extra: challenges](./lesson-extra-1.md)
+### [➡️ Extra: how to work with Pinata](./lesson-extra-2.md)
