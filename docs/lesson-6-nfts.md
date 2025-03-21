@@ -2,7 +2,7 @@
 
 In this lesson, you'll create NFTs on Asset Hub using the Unique SDK. You'll build components that allow users to mint NFTs and retrieve NFT details.
 
-## 2. Setting Up the NFT Creation Component
+## 1. Setting Up the NFT Creation Component
 
 Create a new file: `components/TokenCreationForm.tsx`
 
