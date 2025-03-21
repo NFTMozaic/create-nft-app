@@ -9,7 +9,7 @@ Unique SDK provides a convenient and lightweight way to interact with Substrate-
 - HTTP proxy server: establishes a connection with the blockchain node and provides an HTTP interface. To use an HTTP proxy, you can use [publicly available endpoints](https://docs.unique.network/reference/sdk-endpoints.html) or run your local version.
 - Thin client: you can send requests to an HTTP proxy directly using your favorite HTTP framework. However, the easiest way is to use the `@unique-nft/sdk` package, which provides an easy-to-use way to send requests to an HTTP proxy server using TypeScript. We already installed this package in the previous step.
 
-## Creating the SDK Context
+## 1. Creating the SDK Context
 
 To manage interactions with Asset Hub NFTs efficiently, it's best practice to use React Context. This allows you to access the SDK instance globally without repeatedly creating new connections.
 
@@ -75,7 +75,7 @@ The context maintains a single piece of state: `sdk`, which stores the instance 
 
 A custom hook, `useSdkContext`, is provided to allow components to easily access the SDK instance. If a component tries to use this hook outside of the `UniqueSDKProvider`, an error is thrown.
 
-## Integrating the Provider in Your App
+## 2. Integrating the Provider in Your App
 
 Next, integrate this context provider into your app's layout file so the SDK instance is accessible throughout your entire application.
 

@@ -1,6 +1,6 @@
 # 📦 Using Pinata
 
-In this lesson, you’ll learn how to:
+In this lesson, you'll learn how to:
 
 Create a Pinata account
 Set up the SDK and environment variables
@@ -8,7 +8,7 @@ Integrate Pinata into your Next.js app for IPFS uploads
 
 ## Why Pinata?
 
-When building web3 applications, off-chain metadata (like images or NFT details) must be stored in a decentralized way. That’s where IPFS comes in.
+When building web3 applications, off-chain metadata (like images or NFT details) must be stored in a decentralized way. That's where IPFS comes in.
 
 Pinata is a developer-friendly IPFS service that allows you to:
 
@@ -18,7 +18,7 @@ Pinata is a developer-friendly IPFS service that allows you to:
 
 👉 Sign up at [pinata.cloud](https://pinata.cloud) (free tier available), then head to the [API Keys section](https://app.pinata.cloud/developers/api-keys) to generate an API key.
 
-Copy your JWT token and gateway URL—you’ll need them in the next step.
+Copy your JWT token and gateway URL—you'll need them in the next step.
 
 
 ## Installing the Pinata SDK
@@ -47,7 +47,7 @@ Replace placeholders with actual values. Double check your `.env` is added to `.
 
 # Integrating Pinata in Next.js
 
-Now, let’s build API routes and utilities to interact with Pinata securely from your app.
+Now, let's build API routes and utilities to interact with Pinata securely from your app.
 
 ## Step 1: Create a Pinata Utility
 
@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
 
 ## Step 5: Define NFT Metadata Types
 
-We’ll use OpenSea-compatible metadata formats. Reference:
+We'll use OpenSea-compatible metadata formats. Reference:
 
 - NFT metadata: https://docs.opensea.io/docs/metadata-standards
 - Collection metadata: https://docs.opensea.io/docs/contract-level-metadata
@@ -188,7 +188,7 @@ export interface NFTMetadata extends BasicMetadata {
 
 To test the integration, create simple components to upload images and metadata, then display the uploaded NFT using the returned IPFS URL.
 
-Here’s a minimal example to get you started:
+Here's a minimal example to get you started:
 
 `ImageUpload.tsx`
 

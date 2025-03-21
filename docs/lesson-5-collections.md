@@ -2,7 +2,7 @@
 
 In this lesson, you'll build a Collection Creation Component that allows users to create an NFT collection on Polkadot's Asset Hub.
 
-## 2. Setting Up the Collection Creation Component
+## 1. Setting Up the Collection Creation Component
 
 📌 Why Do We Need This Component?
 Before minting NFTs, we need a collection to store them. This component will:
