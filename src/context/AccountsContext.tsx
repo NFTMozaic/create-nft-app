@@ -5,12 +5,13 @@ import React, {
   ReactNode,
   useCallback,
   useContext,
+  useMemo,
 } from "react";
 import {
   IPolkadotExtensionAccount,
   Polkadot,
 } from "@unique-nft/utils/extension";
-import { KNOWN_WALLETS } from "../utils";
+import { KNOWN_WALLETS } from "../lib/utils";
 
 interface Wallet {
   name: string;
@@ -42,6 +43,17 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = ({
     useState<IPolkadotExtensionAccount | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+
+  const handleSetActiveAccount = useCallback((account: IPolkadotExtensionAccount) => {
+    setActiveAccount(account);
+    localStorage.setItem("lastActiveAccount", account.address);
+  }, []);
+  
+  const handleError = useCallback((error: unknown, contextMessage: string) => {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    setError(`${contextMessage}: ${message}`);
+  }, []); 
+
   const connectWallet = useCallback(
     async (walletName: string, lastActiveAddress?: string) => {
       setError(null);
@@ -65,32 +77,24 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = ({
           return newAccounts;
         });
 
-        setTimeout(() => {
-          if (!activeAccount) {
-            const restoredAccount =
-              requestedWallet.accounts.find(
-                (acc) => acc.address === lastActiveAddress
-              ) ||
-              requestedWallet.accounts[0] ||
-              null;
-            setActiveAccount(restoredAccount);
-            if (restoredAccount)
-              localStorage.setItem(
-                "lastActiveAccount",
-                restoredAccount.address
-              );
-          }
-        }, 100);
+        if (!activeAccount) {
+          const restoredAccount =
+            requestedWallet.accounts.find(
+              (acc) => acc.address === lastActiveAddress
+            ) ||
+            requestedWallet.accounts[0] ||
+            null;
+          setActiveAccount(restoredAccount);
+          if (restoredAccount)
+            localStorage.setItem("lastActiveAccount", restoredAccount.address);
+        }
 
         localStorage.setItem("lastConnectedWallet", walletName);
       } catch (error) {
-        let message: string = "";
-        if (error instanceof Error) message = error.message;
-        else message = "Unknown error";
-        setError("Error connecting wallets: " + message);
+        handleError(error, "Error connecting wallets");
       }
     },
-    [activeAccount]
+    [activeAccount, handleError]
   );
 
   useEffect(() => {
@@ -110,20 +114,12 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = ({
           await connectWallet(lastConnectedWallet, lastActiveAccount);
         }
       } catch (error) {
-        let message: string = "";
-        if (error instanceof Error) message = error.message;
-        else message = "Unknown error";
-        setError("Error initializing wallets: " + message);
+        handleError(error, "Error initializing wallets");
       }
     };
 
     connect();
-  }, [connectWallet]);
-
-  const handleSetActiveAccount = (account: IPolkadotExtensionAccount) => {
-    setActiveAccount(account);
-    localStorage.setItem("lastActiveAccount", account.address);
-  };
+  }, [connectWallet, handleError]);
 
   const disconnectWallet = () => {
     localStorage.removeItem("lastConnectedWallet");
@@ -134,17 +130,19 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = ({
     setWallets([...KNOWN_WALLETS]);
   };
 
+  const contextValue = useMemo(() => ({
+    wallets,
+    accounts,
+    activeAccount,
+    error,
+    connectWallet,
+    setActiveAccount: handleSetActiveAccount,
+    disconnectWallet,
+  }), [wallets, accounts, activeAccount, error, connectWallet, handleSetActiveAccount]);
+
   return (
     <AccountsContext.Provider
-      value={{
-        wallets,
-        accounts,
-        activeAccount,
-        error,
-        connectWallet,
-        setActiveAccount: handleSetActiveAccount,
-        disconnectWallet,
-      }}
+      value={contextValue}
     >
       {children}
     </AccountsContext.Provider>

@@ -3,7 +3,6 @@
 import {
   createContext,
   PropsWithChildren,
-  useEffect,
   useMemo,
   useState,
   useContext,
@@ -21,19 +20,21 @@ export const UniqueSDKContext = createContext<SdkContextValueType>({
 export const baseUrl = process.env.NEXT_PUBLIC_REST_URL || "";
 
 export const UniqueSDKProvider = ({ children }: PropsWithChildren) => {
-  const [sdk, setSdk] = useState<AssetHubInstance>();
+  const [sdk] = useState(() => AssetHub({ baseUrl }));
 
-  useEffect(() => {
-    const sdk = AssetHub({ baseUrl });
-    setSdk(sdk);
-  }, []);
+  const sdkValue = useMemo(() => ({ sdk }), [sdk]);
 
   return (
-    <UniqueSDKContext.Provider value={useMemo(() => ({ sdk }), [sdk])}>
+    <UniqueSDKContext.Provider value={sdkValue}>
       {children}
     </UniqueSDKContext.Provider>
   );
 };
 
-
-export const useSdkContext = () => useContext(UniqueSDKContext);
+export const useSdkContext = () => {
+  const context = useContext(UniqueSDKContext);
+  if (!context) {
+    throw new Error("useSdkContext must be used within a UniqueSDKProvider");
+  }
+  return context;
+};
