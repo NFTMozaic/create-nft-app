@@ -1,15 +1,8 @@
-# Polkadot NFTMozaic Consensus Hong Kong 2025 Challenge
+# The Polkadot NFT template
 
-Welcome to the Polkadot NFTMozaic bounty challenge. This challenge consists of a core challenge with a dedicated bounty split between a winner and a runner-up according to the prize distribution listed below and several additional bonus challenges, each providing additional prize allotments if successfully accomplished. The bonus prizes are available only to the winner and runner-up.
+Asset Hub is a specialized parachain within the Polkadot ecosystem designed for managing and transferring digital assets, including NFTs, without requiring smart contracts. It leverages Substrate's built-in `nfts pallet` to facilitate efficient and scalable NFT creation and management.
 
-- [Polkadot NFTMozaic Consensus Hong Kong 2025 Challenge](#polkadot-nftmozaic-consensus-hong-kong-2025-challenge)
-  - [Task challenge overview](#task-challenge-overview)
-  - [Task components](#task-components)
-    - [Core challenge](#core-challenge)
-    - [Optional challenges](#optional-challenges)
-- [Judgement criteria](#judgement-criteria)
-- [The bounty awards structure](#the-bounty-awards-structure)
-- [The Asset Hub \& Next.js template](#the-asset-hub--nextjs-template)
+- [The Polkadot NFT template](#the-polkadot-nft-template)
   - [TL;DR](#tldr)
   - [Intro](#intro)
   - [Main components overview](#main-components-overview)
@@ -22,67 +15,6 @@ Welcome to the Polkadot NFTMozaic bounty challenge. This challenge consists of a
     - [Metadata](#metadata)
   - [Wrapping Up](#wrapping-up)
     - [Next Steps](#next-steps)
-
-## Task challenge overview
-
-Your challenge is to create a simple UI that provides a means to create an NFT asset (collection, token) on the Polkadot Asset Hub. The challenge consists of a core component and two optional challenges.
-
-## Task components 
-
-### Core challenge
-
-This core challenge is to create a simple UI that allows a user to define a collection, mint one or more tokens of that collection and list and display the minted tokens on a page.
-
-### Optional challenges
-
-1. Using the [Opensea metadata format](https://docs.opensea.io/docs/metadata-standards) supported by the Asset Hub NFTs pallet, provide the user an opportunity to add an audio file and a description as token's extended digital assets in addition to the base image. Provide a way to display these additional assets in the browser.
-
-2. Provide a 'Sell' button to promote a token into a sellable item and a 'Buy' button that allows a user logged in via a Polkadot wallet to purchase the token.
-
-# Judgement criteria
-
-The **presentable result** of your efforts should be a working in-browser UI (dApp) that implements minting of an NFT of new or existing collection. This implies an availability of both a collection and token creation fields and buttons in the UI as well as the additional elements that might be needed as a part of the optional challenges if you choose to implement them.
-
-The **goal** of your challenge is, however, more relevant for the challenge evaluation. To accomplish the goal you should provide clean, practical to implement, easy to read and replicate code that showcases how you implemented your solution. 
-
-For the frontend you are free to choose any framework you are comfortable with. You can use, vanilla JS/TS, React, Angular, Vue.js, Svelte, Solid.js, qwik, Astro. No restrictions.
-
-For the backend you are free to chose any of the SDKs at your disposal which you might deem practical. We will be providing you with a tutorial below on how to accomplish this challenge with the Unique Network SDK which facilitates Asset Hub utilities in addition to the Unique's own parachain-specific functions. This approach provides, possibly the fastest time-to-completion cycle development environment for the task you are given and is also the one in which we can provide the most detailed support. We are providing comprehensive instructions below with everything you need to complete the task. The other most practical options include PolkadotJS and PAPI. We do not have a dedicated environment setup available for these options and can give limited support and assistance for them but you are free to choose them for your task.
-
-We want you to consider this challenge with thoughts of leaving behind instructions for a whole generation of coders who will ask themselves how to do exactly what you are trying to accomplish in this challenge. We intend to showcase your solution in a future NFTs on Asset Hub tutorials section. Give us your best effort for posterity!
-
-Your solution will be judged on two points:
-
-- whether or not it has successfully accomplished the set task.
-- how presentable is your code as a tutorial for a developer looking to replicate your efforts.
-
-If you choose to use the Unique SDK as your development tool we are also kindly asking you you submit your notes on your experience in usting it. Was it easy to adopt the methods used? Did it help you work faster? Anything that might help make it even better? Please send us your notes to ff@unique.network. Your submission will be greatly valued and will hopefully make the SDK even better.
-
-# The bounty awards structure
-
-- A winning solution and a runner-up will be chosen based on the judgment criteria.
-- A winning solution will receive a bounty of $1000 worth of stablecoins for successfully completing the core task.
-- The runner-up will receive a bounty of $500 worth of stablecoins for successfully completing the core task..
-- An additional bounty will be added to both the winner's and the runner's-up core bounty of they choose to pursue and succeed in successfully completing each optional challenge.
-- For the FIRST optional challenge, $200 worth of stablecoins will be added to the award amount for its successful completion.
-- For the SECOND optional challenge, $300 worth of stablecoins will be added to the award amount for its successful completion.
-
-# The Asset Hub & Next.js template
-
-Asset Hub is a specialized parachain within the Polkadot ecosystem designed for managing and transferring digital assets, including NFTs, without requiring smart contracts. It leverages Substrate's built-in `nfts pallet` to facilitate efficient and scalable NFT creation and management.
-
-- [TL;DR](#tldr)
-- [Intro](#intro)
-- [Main components overview](#main-components-overview)
-  - [1. The Asset Hub node](#1-the-asset-hub-node)
-  - [2. Unique SDK](#2-unique-sdk)
-  - [Running local Asset Hub node \& SDK](#running-local-asset-hub-node--sdk)
-  - [Running Next.js application](#running-nextjs-application)
-- [Polkadot NFTs and metadata 101](#polkadot-nfts-and-metadata-101)
-  - [Creating collections and NFTs](#creating-collections-and-nfts)
-  - [Metadata](#metadata)
-- [Wrapping Up](#wrapping-up)
-  - [Next Steps](#next-steps)
 
 ## TL;DR
 
@@ -143,9 +75,7 @@ There are plenty of publicly available nodes you can use to send transactions. Y
 > [!TIP]
 > You can receive testnet tokens for free at https://faucet.polkadot.io/
 
-For this workshop, we will use our local testnet version using the Acala Chopsticks framework, which creates a local fork of a real network. To understand how Chopsticks works, you may proceed to the [official GitHub repo](https://github.com/AcalaNetwork/chopsticks).
-
-We have already crafted all the configurations for this workshop for your local testnet. In a few moments, we will launch and test it along with the SDK server.
+This template contains all the required configurations for launching a local testnet using the Acala Chopsticks, which creates a local fork of a real network. To understand how Chopsticks works, you may proceed to the [official GitHub repo](https://github.com/AcalaNetwork/chopsticks).
 
 ### 2. Unique SDK
 
@@ -153,7 +83,7 @@ We have already crafted all the configurations for this workshop for your local 
 
 Unique SDK provides a convenient and lightweight way to interact with Substrate-based blockchains. It consists of two components:
 
-- HTTP proxy server: establishes a connection with the blockchain node and provides an HTTP interface. To use an HTTP proxy, you can use [publicly available endpoints](https://docs.unique.network/reference/sdk-endpoints.html) or run your local version. For this workshop, we prepared a docker configuration that provides your local proxy server connected to [the local blockchain](#the-asset-hub-node).
+- HTTP proxy server: establishes a connection with the blockchain node and provides an HTTP interface. To use an HTTP proxy, you can use [publicly available endpoints](https://docs.unique.network/reference/sdk-endpoints.html) or run your local version. We prepared a docker configuration that provides your local proxy server connected to [the local blockchain](#the-asset-hub-node).
 - Thin client: you can send requests to an HTTP proxy directly using your favorite HTTP framework. However, the easiest way is to use the `@unique-nft/sdk` package, which provides an easy-to-use way to send requests to an HTTP proxy server using TypeScript.
 
 ### Running local Asset Hub node & SDK
