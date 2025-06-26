@@ -10,7 +10,7 @@ npx create-nft-app my-app
 
 ## Available Templates
 
-- **next-foundry** - Full-stack NFT dApp with Next.js, Wagmi, and Foundry for Polkadot Passet Hub
+- **Next.js + Foundry (Polkadot VM)** - Full-stack NFT dApp with Next.js, Wagmi, and Foundry for Polkadot Passet Hub
   - Features: Next.js 15, Reown AppKit, Wagmi v2, Foundry
   - [Template Documentation](templates/next-foundry/README.md)
 
