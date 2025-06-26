@@ -21,7 +21,6 @@ Before you begin, ensure you have the following installed:
 ## Creating an App
 
 1. **Create a new app using:**
-
    ```bash
    npx create-polkadot-nft
    ```
@@ -45,7 +44,6 @@ Before you begin, ensure you have the following installed:
    ```
 
 2. **Install dependencies**
-
    ```bash
    pnpm install
    ```
@@ -58,23 +56,21 @@ Before you begin, ensure you have the following installed:
 ## Configuration
 
 1. **Environment Setup**
-
    ```bash
    cp .env.example .env
    ```
 
 2. **Configure Environment Variables**
-
+   
    Edit `.env` with your specific values:
-
    ```env
    # Get your Project ID from https://cloud.reown.com
    NEXT_PUBLIC_PROJECT_ID=your_reown_project_id_here
-
+   
    # Polkadot Passet Hub testnet configuration
    NEXT_PUBLIC_BLOCKSCOUT_URL=https://blockscout-passet-hub.parity-testnet.parity.io
    NEXT_PUBLIC_RPC_URL=https://testnet-passet-hub-eth-rpc.polkadot.io
-
+   
    # Your deployed NFT contract address
    NEXT_PUBLIC_CONTRACT_ADDRESS=0xb2428df8e9E0fed2A8c6F0311190ecEa11c80c31
    ```
@@ -88,13 +84,11 @@ Before you begin, ensure you have the following installed:
 Polkadot virtual machine requires a different compiler called `resolc`. It will be automatically installed with `foundry-polkadot`. You can find the installation guide in the [official documentation](https://github.com/paritytech/foundry-polkadot?tab=readme-ov-file#1-installation-instruction).
 
 ### Building Contracts
-
 ```bash
 pnpm run contracts:build
 ```
 
 ### Deploying Contracts
-
 ```bash
 # Set your private key
 export ETH_PRIVATE_KEY=your_private_key_here
@@ -109,7 +103,6 @@ forge create PolkadotNFT \
 ```
 
 ### Minting NFTs
-
 ```bash
 # Mint a new NFT
 cast send $CONTRACT_ADDRESS \
