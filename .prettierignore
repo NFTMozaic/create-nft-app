@@ -1,0 +1,25 @@
+# Dependencies
+**/node_modules/
+**/.next/
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Package managers
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Git
+.git/
+
+# Temporary files
+*.tmp
+*.temp 

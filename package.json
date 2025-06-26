@@ -1,45 +1,47 @@
 {
-  "name": "assethub-next",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "fork": "npx @acala-network/chopsticks@latest --endpoint=wss://kusama-asset-hub-rpc.polkadot.io",
-    "test": "vitest",
-    "test:e2e": "npx playwright test",
-    "prepare-e2e": "npx playwright install chromium && npx w3wallets polkadotJS"
+  "name": "create-nft-app",
+  "version": "0.0.0",
+  "description": "One-command setup for Polkadot NFT projects",
+  "main": "bin/cli.js",
+  "bin": {
+    "create-nft-app": "./bin/cli.js"
   },
+  "files": [
+    "bin",
+    "templates"
+  ],
+  "scripts": {
+    "global-link": "pnpm unlink --global && pnpm link --global",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "pnpm run lint && pnpm run format:check",
+    "fix": "pnpm run lint:fix && pnpm run format",
+    "changeset": "changeset",
+    "local-release": "changeset version && changeset publish"
+  },
+  "keywords": [
+    "polkadot",
+    "nft",
+    "template"
+  ],
+  "author": "",
+  "license": "MIT",
   "dependencies": {
-    "@polkadot/extension-dapp": "^0.58.2",
-    "@polkadot/extension-inject": "^0.58.2",
-    "@unique-nft/sdk": "^2.5.0",
-    "@unique-nft/sr25519": "^0.0.2",
-    "@unique-nft/utils": "^0.3.20",
-    "next": "15.1.4",
-    "pinata-web3": "^0.5.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@inquirer/prompts": "^7.5.3",
+    "commander": "^14.0.0",
+    "fs-extra": "^11.3.0",
+    "ora": "^8.2.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@playwright/test": "^1.50.1",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.2.0",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@vitejs/plugin-react": "^4.3.4",
-    "dotenv": "^16.4.7",
-    "eslint": "^9",
-    "eslint-config-next": "15.1.4",
-    "jsdom": "^26.0.0",
-    "typescript": "^5",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.3",
-    "w3wallets": "^0.2.2"
+    "@changesets/cli": "^2.29.5",
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.1",
+    "globals": "^16.2.0",
+    "prettier": "^3.5.3"
   },
-  "packageManager": "yarn@1.22.22+sha256.c17d3797fb9a9115bf375e31bfd30058cac6bc9c3b8807a3d8cb2094794b51ca"
+  "packageManager": "pnpm@10.11.0"
 }
