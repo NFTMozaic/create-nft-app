@@ -5,7 +5,7 @@ One-command setup for Polkadot NFT projects.
 ## Quick Start
 
 ```sh
-npx create-nft-app
+npx create-nft-app my-app
 ```
 
 ## Available Templates
