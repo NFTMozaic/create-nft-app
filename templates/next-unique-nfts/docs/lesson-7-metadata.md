@@ -166,6 +166,7 @@ return;
 };
 
 return (
+
 <div className="flex flex-col items-center p-6 bg-white shadow-md rounded-xl border w-80">
 <h2 className="text-lg font-semibold text-gray-900 text-center mb-4">
 Create NFT
