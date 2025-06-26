@@ -2,6 +2,7 @@
 
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 [![npm version](https://img.shields.io/npm/v/create-nft-app.svg)](https://www.npmjs.com/package/create-nft-app)
+
 One-command setup for Polkadot NFT projects.
 
 ## Quick Start
