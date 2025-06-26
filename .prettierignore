@@ -5,12 +5,15 @@
 # Build outputs
 dist/
 build/
+out/
 *.tsbuildinfo
 
 # Logs
 *.log
 npm-debug.log*
 pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Package managers
 pnpm-lock.yaml
@@ -20,6 +23,64 @@ yarn.lock
 # Git
 .git/
 
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
 # Temporary files
 *.tmp
-*.temp 
+*.temp
+.tmp/
+.temp/
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Cache directories
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Generated files
+*.min.js
+*.min.css
+*.bundle.js
+
+# Documentation
+docs/
+*.md
+
+# Template directories (if they contain generated code)
+templates/**/dist/
+templates/**/build/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+
+# Config files that shouldn't be formatted
+*.config.js
+*.config.ts
+
+# Lock files
+soldeer.lock 
