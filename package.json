@@ -1,6 +1,6 @@
 {
   "name": "create-nft-app",
-  "version": "0.0.0",
+  "version": "0.0.4",
   "description": "One-command setup for Polkadot NFT projects",
   "main": "bin/cli.js",
   "bin": {
@@ -10,6 +10,10 @@
     "bin",
     "templates"
   ],
+  "homepage": "https://github.com/NFTMozaic/create-nft-app",
+  "bugs": {
+    "url": "https://github.com/NFTMozaic/create-nft-app/issues"
+  },
   "scripts": {
     "global-link": "pnpm unlink --global && pnpm link --global",
     "lint": "eslint .",
@@ -19,7 +23,8 @@
     "check": "pnpm run lint && pnpm run format:check",
     "fix": "pnpm run lint:fix && pnpm run format",
     "changeset": "changeset",
-    "local-release": "changeset version && changeset publish"
+    "changeset:version": "changeset version",
+    "local-release": "changeset publish"
   },
   "keywords": [
     "polkadot",
@@ -28,6 +33,9 @@
   ],
   "author": "",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@inquirer/prompts": "^7.5.3",
     "commander": "^14.0.0",

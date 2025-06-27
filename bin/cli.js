@@ -9,7 +9,7 @@ const ora = require('ora').default;
 // Template mapping: folder name -> human readable name
 const TEMPLATE_MAPPING = {
   'next-foundry-pvm': 'Next.js + Foundry (Polkadot VM)',
-  'next-unique-nfts': 'Next.js + Unique SDK (Pallet NFTs)'
+  'next-unique-nfts': 'Next.js + Unique SDK (Pallet NFTs)',
 };
 
 /**
@@ -23,7 +23,7 @@ async function isDirectoryEmpty(dirPath) {
   }
 
   const allowedFiles = ['.git', '.DS_Store'];
-  
+
   const files = await fs.readdir(dirPath);
   const filteredFiles = files.filter(file => !allowedFiles.includes(file));
   return filteredFiles.length === 0;
@@ -32,12 +32,14 @@ async function isDirectoryEmpty(dirPath) {
 /**
  * Validate that a directory can be used for project creation
  * @param {string} dirPath - Path to the directory to validate
- * @param {string} dirName - Human-readable name for error messages
+ * @param {string} _dirName - Human-readable name for error messages (unused but kept for API consistency)
  * @throws {Error} - If directory is not suitable for project creation
  */
-async function validateDirectory(dirPath, dirName) {
+async function validateDirectory(dirPath, _dirName) {
   if (!(await isDirectoryEmpty(dirPath))) {
-    throw new Error(`✖ Directory is not empty. Please provide a project name or use an empty directory.`);
+    throw new Error(
+      `✖ Directory is not empty. Please provide a project name or use an empty directory.`
+    );
   }
 }
 
@@ -51,21 +53,21 @@ async function setupProjectPath(projectName) {
     // Use current directory
     const currentDir = process.cwd();
     await validateDirectory(currentDir, 'current directory');
-    
+
     return {
       projectPath: currentDir,
       projectName: path.basename(currentDir),
-      useCurrentDir: true
+      useCurrentDir: true,
     };
   } else {
     // Create new directory
     const projectPath = path.join(process.cwd(), projectName);
     await validateDirectory(projectPath, projectName);
-    
+
     return {
       projectPath,
       projectName,
-      useCurrentDir: false
+      useCurrentDir: false,
     };
   }
 }
@@ -83,9 +85,9 @@ async function getTemplateSelection(templateOption) {
   const templates = Object.keys(TEMPLATE_MAPPING);
   return await select({
     message: 'Choose a template:',
-    choices: templates.map(t => ({ 
-      name: TEMPLATE_MAPPING[t], 
-      value: t 
+    choices: templates.map(t => ({
+      name: TEMPLATE_MAPPING[t],
+      value: t,
     })),
   });
 }
@@ -98,7 +100,7 @@ async function getTemplateSelection(templateOption) {
  */
 async function createProject(templatePath, projectPath, templateName) {
   const spinner = ora(`Creating ${templateName} project...`).start();
-  
+
   try {
     await fs.copy(templatePath, projectPath);
     spinner.succeed(`Created ${templateName} project`);
@@ -144,21 +146,28 @@ program
   .action(async (projectName, options) => {
     try {
       // Setup project path and validate directory
-      const { projectPath, projectName: finalProjectName, useCurrentDir } = await setupProjectPath(projectName);
-      
+      const {
+        projectPath,
+        projectName: finalProjectName,
+        useCurrentDir,
+      } = await setupProjectPath(projectName);
+
       // Get template selection
       const template = await getTemplateSelection(options.template);
       const templatePath = path.join(__dirname, '..', 'templates', template);
-      
+
       // Create project
-      await createProject(templatePath, projectPath, TEMPLATE_MAPPING[template]);
-      
+      await createProject(
+        templatePath,
+        projectPath,
+        TEMPLATE_MAPPING[template]
+      );
+
       // Update package.json
       await updatePackageJson(projectPath, finalProjectName);
-      
+
       // Show success message
       showSuccessMessage(finalProjectName, useCurrentDir);
-      
     } catch (error) {
       console.error(error.message);
       process.exit(1);
