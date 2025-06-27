@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "contracts:install": "cd contracts && forge soldeer install",
+    "contracts:install": "cd contracts && foundryup-polkadot && forge soldeer install",
     "contracts:build": "cd contracts && forge build --resolc",
     "start": "next start",
     "lint": "next lint"
