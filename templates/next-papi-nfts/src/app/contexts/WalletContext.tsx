@@ -13,7 +13,9 @@ interface WalletContextType {
   connect: (walletName: string) => Promise<void>;
   disconnect: () => void;
   selectAccount: (address: string) => void;
-  getInjectedAccount: (address: string) => Promise<InjectedPolkadotAccount | null>;
+  getInjectedAccount: (
+    address: string
+  ) => Promise<InjectedPolkadotAccount | null>;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -28,18 +30,26 @@ export const useWallet = () => {
 
 const STORAGE_KEY = 'wallet-connection';
 
-export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
   const [accounts, setAccounts] = useState<WalletAccount[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState<WalletAccount | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<WalletAccount | null>(
+    null
+  );
   const [isConnecting, setIsConnecting] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Load wallets on mount
   useEffect(() => {
     const supportedWallets = getWallets();
-    setWallets(supportedWallets);
+    setWallets(
+      supportedWallets.filter(
+        wallet => wallet.title !== 'Nova Wallet' && wallet.installed
+      )
+    );
     setIsInitialized(true);
   }, []);
 
@@ -61,12 +71,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setIsConnecting(true);
         await wallet.enable('Your dApp Name');
         const walletAccounts = await wallet.getAccounts();
-        
+
         setSelectedWallet(wallet);
         setAccounts(walletAccounts);
-        
+
         // Select the saved account if it exists
-        const savedAccount = walletAccounts.find(acc => acc.address === accountAddress);
+        const savedAccount = walletAccounts.find(
+          acc => acc.address === accountAddress
+        );
         if (savedAccount) {
           setSelectedAccount(savedAccount);
         } else if (walletAccounts.length > 0) {
@@ -89,18 +101,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const wallet = wallets.find(w => w.extensionName === walletName);
       if (!wallet) throw new Error('Wallet not found');
 
-      await wallet.enable('Your dApp Name');
+      await wallet.enable(process.env.NEXT_PUBLIC_DAPP_NAME!);
       const walletAccounts = await wallet.getAccounts();
-      
+
       setSelectedWallet(wallet);
       setAccounts(walletAccounts);
-      
-      // Don't auto-select account - let user choose
-      // But save wallet name for auto-reconnect
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ 
-        walletName, 
-        accountAddress: null 
-      }));
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          walletName,
+          accountAddress: null,
+        })
+      );
     } catch (error) {
       console.error('Failed to connect wallet:', error);
       throw error;
@@ -122,30 +135,37 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setSelectedAccount(account);
       // Save selection to localStorage
       if (selectedWallet) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          walletName: selectedWallet.extensionName,
-          accountAddress: address
-        }));
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            walletName: selectedWallet.extensionName,
+            accountAddress: address,
+          })
+        );
       }
     }
   };
 
-  const getInjectedAccount = async (address: string): Promise<InjectedPolkadotAccount | null> => {
+  const getInjectedAccount = async (
+    address: string
+  ): Promise<InjectedPolkadotAccount | null> => {
     if (!selectedWallet) return null;
-    
+
     try {
-      const injected = (window as any).injectedWeb3?.[selectedWallet.extensionName];
+      const injected = (window as any).injectedWeb3?.[
+        selectedWallet.extensionName
+      ];
       if (!injected) return null;
-      
+
       const accounts = await injected.accounts.get();
       const account = accounts.find((acc: any) => acc.address === address);
-      
+
       if (!account) return null;
-      
+
       return {
         address: account.address,
         name: account.name,
-        polkadotSigner: injected.signer
+        polkadotSigner: injected.signer,
       };
     } catch (error) {
       console.error('Failed to get injected account:', error);
@@ -164,7 +184,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         connect,
         disconnect,
         selectAccount,
-        getInjectedAccount
+        getInjectedAccount,
       }}
     >
       {children}

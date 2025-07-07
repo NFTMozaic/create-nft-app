@@ -77,4 +77,4 @@ export const PolkadotProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       {children}
     </PolkadotContext.Provider>
   );
-}; 
+};
