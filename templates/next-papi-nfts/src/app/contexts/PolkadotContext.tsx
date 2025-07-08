@@ -4,9 +4,13 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { dot } from "@polkadot-api/descriptors";
 import { createClient, PolkadotClient, TypedApi } from "polkadot-api";
 import { getSmProvider } from "polkadot-api/sm-provider";
-import { start } from "polkadot-api/smoldot";
 import { chainSpec } from "polkadot-api/chains/paseo_asset_hub";
 import { chainSpec as chainSpecPaseo } from "polkadot-api/chains/paseo";
+import { startFromWorker } from "polkadot-api/smoldot/from-worker";
+
+const SmWorker = () => new Worker(
+  new URL("polkadot-api/smoldot/worker", import.meta.url)
+);
 
 interface PolkadotContextType {
   client: PolkadotClient;
@@ -35,11 +39,13 @@ export const PolkadotProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const initializeClient = async () => {
       try {
         setError(null);
+
+        const worker = SmWorker();
+        const smoldot = startFromWorker(worker);
+
+        const relayChain = await smoldot.addChain({ chainSpec: chainSpecPaseo });
         
-        const sm = start();
-        const relayChain = await sm.addChain({ chainSpec: chainSpecPaseo });
-        
-        const passetChain = await sm.addChain({
+        const passetChain = await smoldot.addChain({
           chainSpec,
           potentialRelayChains: [relayChain],
         });
@@ -53,7 +59,7 @@ export const PolkadotProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // Subscribe to finalized blocks to check connection
         polkadotClient.finalizedBlock$.subscribe({
           next: (finalizedBlock) => {
-            console.log('Connected to Passet Hub Testnet:', finalizedBlock.number, finalizedBlock.hash);
+            console.log('Connected:', finalizedBlock.number, finalizedBlock.hash);
             setIsConnected(true);
           },
           error: (err) => {

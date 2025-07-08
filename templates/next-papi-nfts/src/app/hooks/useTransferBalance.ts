@@ -4,7 +4,6 @@ import { MultiAddress } from '@polkadot-api/descriptors';
 import { usePolkadot } from '../contexts/PolkadotContext';
 import { useState } from 'react';
 import { useWallet } from '../contexts/WalletContext';
-import { PolkadotSigner } from 'polkadot-api';
 
 export function useTransferBalance() {
   const { api } = usePolkadot();
@@ -24,9 +23,9 @@ export function useTransferBalance() {
         value: amount,
       });
 
-      // TODO: remove cast
+      // TODO: !
       const result = await tx.signAndSubmit(
-        selectedAccount?.signer as PolkadotSigner
+        selectedAccount?.polkadotSigner!
       );
 
       return result;

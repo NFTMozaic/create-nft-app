@@ -1,48 +1,65 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getWallets, Wallet, WalletAccount } from '@talismn/connect-wallets';
-import { InjectedPolkadotAccount } from 'polkadot-api/pjs-signer';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
+import { getWallets, Wallet } from '@talismn/connect-wallets';
+import {
+  connectInjectedExtension,
+  InjectedPolkadotAccount,
+  InjectedExtension,
+} from 'polkadot-api/pjs-signer';
 
-interface WalletContextType {
+interface WalletContextProps {
   wallets: Wallet[];
   selectedWallet: Wallet | null;
-  accounts: WalletAccount[];
-  selectedAccount: WalletAccount | null;
+  accounts: InjectedPolkadotAccount[];
+  selectedAccount: InjectedPolkadotAccount | null;
   isConnecting: boolean;
+  error: Error | null;
   connect: (walletName: string) => Promise<void>;
-  disconnect: () => void;
   selectAccount: (address: string) => void;
-  getInjectedAccount: (
-    address: string
-  ) => Promise<InjectedPolkadotAccount | null>;
+  selectWallet: (walletName: string) => void;
+  disconnect: () => void;
 }
 
-const WalletContext = createContext<WalletContextType | undefined>(undefined);
+const WalletContext = createContext<WalletContextProps>({
+  wallets: [],
+  selectedWallet: null,
+  accounts: [],
+  selectedAccount: null,
+  isConnecting: false,
+  error: null,
+  connect: async () => {},
+  selectAccount: () => {},
+  selectWallet: () => {},
+  disconnect: () => {},
+});
 
-export const useWallet = () => {
-  const context = useContext(WalletContext);
-  if (!context) {
-    throw new Error('useWallet must be used within a WalletProvider');
-  }
-  return context;
-};
+export const useWallet = () => useContext(WalletContext);
+
+interface WalletProviderProps {
+  children: ReactNode;
+}
 
 const STORAGE_KEY = 'wallet-connection';
 
-export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
+export const WalletProvider: React.FC<WalletProviderProps> = ({
   children,
 }) => {
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
-  const [accounts, setAccounts] = useState<WalletAccount[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState<WalletAccount | null>(
-    null
-  );
-  const [isConnecting, setIsConnecting] = useState(false);
+  const [accounts, setAccounts] = useState<InjectedPolkadotAccount[]>([]);
+  const [selectedAccount, setSelectedAccount] =
+    useState<InjectedPolkadotAccount | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load wallets on mount
   useEffect(() => {
     const supportedWallets = getWallets();
     setWallets(
@@ -68,27 +85,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
         const wallet = wallets.find(w => w.extensionName === walletName);
         if (!wallet?.installed) return;
 
-        setIsConnecting(true);
-        await wallet.enable('Your dApp Name');
-        const walletAccounts = await wallet.getAccounts();
-
         setSelectedWallet(wallet);
-        setAccounts(walletAccounts);
+        await connect(walletName);
 
         // Select the saved account if it exists
-        const savedAccount = walletAccounts.find(
-          acc => acc.address === accountAddress
-        );
-        if (savedAccount) {
-          setSelectedAccount(savedAccount);
-        } else if (walletAccounts.length > 0) {
-          setSelectedAccount(walletAccounts[0]);
+        if (accountAddress) {
+          setTimeout(() => {
+            selectAccount(accountAddress);
+          }, 100);
         }
       } catch (error) {
         console.error('Failed to auto-connect wallet:', error);
         localStorage.removeItem(STORAGE_KEY);
-      } finally {
-        setIsConnecting(false);
       }
     };
 
@@ -96,44 +104,51 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [wallets, isInitialized]);
 
   const connect = async (walletName: string) => {
-    setIsConnecting(true);
     try {
-      const wallet = wallets.find(w => w.extensionName === walletName);
-      if (!wallet) throw new Error('Wallet not found');
+      setLoading(true);
+      setError(null);
 
-      await wallet.enable(process.env.NEXT_PUBLIC_DAPP_NAME!);
-      const walletAccounts = await wallet.getAccounts();
+      let targetWallet: Wallet | null = null;
 
-      setSelectedWallet(wallet);
-      setAccounts(walletAccounts);
+      // Connect to specific wallet
+      targetWallet = wallets.find(w => w.extensionName === walletName) || null;
+      if (!targetWallet) {
+        throw new Error(`Wallet ${walletName} not found`);
+      }
 
+      const selectedExtension: InjectedExtension =
+        await connectInjectedExtension(walletName);
+
+      const accounts: InjectedPolkadotAccount[] =
+        selectedExtension.getAccounts();
+
+      setAccounts(accounts);
+      setSelectedWallet(targetWallet);
+
+      // Save to localStorage
       localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
           walletName,
-          accountAddress: null,
+          accountAddress: selectedAccount?.address || null,
         })
       );
-    } catch (error) {
-      console.error('Failed to connect wallet:', error);
-      throw error;
+    } catch (err) {
+      console.error('Failed to connect extension:', err);
+      setError(
+        err instanceof Error ? err : new Error('Failed to connect to extension')
+      );
     } finally {
-      setIsConnecting(false);
+      setLoading(false);
     }
-  };
-
-  const disconnect = () => {
-    setSelectedWallet(null);
-    setAccounts([]);
-    setSelectedAccount(null);
-    localStorage.removeItem(STORAGE_KEY);
   };
 
   const selectAccount = (address: string) => {
     const account = accounts.find(acc => acc.address === address);
     if (account) {
       setSelectedAccount(account);
-      // Save selection to localStorage
+
+      // Update localStorage with selected account
       if (selectedWallet) {
         localStorage.setItem(
           STORAGE_KEY,
@@ -146,47 +161,37 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const getInjectedAccount = async (
-    address: string
-  ): Promise<InjectedPolkadotAccount | null> => {
-    if (!selectedWallet) return null;
-
-    try {
-      const injected = (window as any).injectedWeb3?.[
-        selectedWallet.extensionName
-      ];
-      if (!injected) return null;
-
-      const accounts = await injected.accounts.get();
-      const account = accounts.find((acc: any) => acc.address === address);
-
-      if (!account) return null;
-
-      return {
-        address: account.address,
-        name: account.name,
-        polkadotSigner: injected.signer,
-      };
-    } catch (error) {
-      console.error('Failed to get injected account:', error);
-      return null;
+  const selectWallet = (walletName: string) => {
+    const wallet = wallets.find(w => w.extensionName === walletName);
+    if (wallet) {
+      setSelectedWallet(wallet);
+      setAccounts([]);
+      setSelectedAccount(null);
     }
   };
 
+  const disconnect = () => {
+    setSelectedWallet(null);
+    setAccounts([]);
+    setSelectedAccount(null);
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
+  const value: WalletContextProps = {
+    wallets,
+    selectedWallet,
+    accounts,
+    selectedAccount,
+    isConnecting: loading,
+    error,
+    connect,
+    selectAccount,
+    selectWallet,
+    disconnect,
+  };
+
   return (
-    <WalletContext.Provider
-      value={{
-        wallets,
-        selectedWallet,
-        accounts,
-        selectedAccount,
-        isConnecting,
-        connect,
-        disconnect,
-        selectAccount,
-        getInjectedAccount,
-      }}
-    >
+    <WalletContext.Provider value={value}>
       {children}
     </WalletContext.Provider>
   );
