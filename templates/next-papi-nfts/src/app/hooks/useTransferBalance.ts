@@ -24,9 +24,7 @@ export function useTransferBalance() {
       });
 
       // TODO: !
-      const result = await tx.signAndSubmit(
-        selectedAccount?.polkadotSigner!
-      );
+      const result = await tx.signAndSubmit(selectedAccount?.polkadotSigner!);
 
       return result;
     } catch (err) {

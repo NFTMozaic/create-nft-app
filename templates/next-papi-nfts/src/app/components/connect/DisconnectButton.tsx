@@ -6,10 +6,7 @@ export const DisconnectButton: React.FC<DisconnectButtonProps> = ({
   onClick,
 }) => {
   return (
-    <button
-      onClick={onClick}
-      className="disconnect-button"
-    >
+    <button onClick={onClick} className="disconnect-button">
       Disconnect Wallet
     </button>
   );

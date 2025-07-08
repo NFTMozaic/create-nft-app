@@ -27,8 +27,8 @@ export function ERC721Token({ token }: ERC721TokenProps) {
                 <div className={styles.placeholderIcon}>✕</div>
               </div>
             ) : (
-              <Image 
-                src={getImageUrl(token.metadata.image)} 
+              <Image
+                src={getImageUrl(token.metadata.image)}
                 alt={token.metadata?.name || 'NFT'}
                 width={48}
                 height={48}
@@ -43,7 +43,7 @@ export function ERC721Token({ token }: ERC721TokenProps) {
           <p className="card-subtitle">{token.metadata?.name || 'Unnamed'}</p>
         </div>
       </div>
-      
+
       <div className={styles.details}>
         <div className={styles.row}>
           <span className={styles.label}>Owner:</span>

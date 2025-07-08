@@ -10,21 +10,22 @@ interface ProvidersProps {
 }
 
 export function Providers({ children }: ProvidersProps) {
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000,
-      },
-    },
-  }));
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000,
+          },
+        },
+      })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
       <WalletProvider>
-        <PolkadotProvider>
-          {children}
-        </PolkadotProvider>
+        <PolkadotProvider>{children}</PolkadotProvider>
       </WalletProvider>
     </QueryClientProvider>
   );
-} 
+}

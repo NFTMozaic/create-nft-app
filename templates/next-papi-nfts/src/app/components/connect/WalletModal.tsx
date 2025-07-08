@@ -77,9 +77,7 @@ export const WalletModal: React.FC = () => {
         {!showAccounts ? (
           <>
             {wallets.length === 0 ? (
-              <div className="modal-empty-state">
-                No wallets found
-              </div>
+              <div className="modal-empty-state">No wallets found</div>
             ) : (
               wallets.map(wallet => (
                 <WalletItem
@@ -110,9 +108,7 @@ export const WalletModal: React.FC = () => {
                 />
               ))
             ) : (
-              <div className="modal-empty-state">
-                No accounts found
-              </div>
+              <div className="modal-empty-state">No accounts found</div>
             )}
 
             {selectedAccount && <DisconnectButton onClick={handleDisconnect} />}

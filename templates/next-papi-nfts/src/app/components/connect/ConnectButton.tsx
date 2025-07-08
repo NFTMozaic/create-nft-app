@@ -4,10 +4,7 @@ import React from 'react';
 import { useWallet } from '../../contexts/WalletContext';
 
 export const ConnectButton: React.FC = () => {
-  const { 
-    selectedWallet, 
-    selectedAccount 
-  } = useWallet();
+  const { selectedWallet, selectedAccount } = useWallet();
 
   const shortenAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -20,10 +17,7 @@ export const ConnectButton: React.FC = () => {
 
   if (selectedWallet && selectedAccount) {
     return (
-      <button
-        onClick={handleClick}
-        className="connect-button-connected"
-      >
+      <button onClick={handleClick} className="connect-button-connected">
         <div className="connect-button-content">
           <span>{selectedAccount.name || 'Account'}</span>
           <span className="connect-button-address">
@@ -35,10 +29,7 @@ export const ConnectButton: React.FC = () => {
   }
 
   return (
-    <button
-      onClick={handleClick}
-      className="connect-button"
-    >
+    <button onClick={handleClick} className="connect-button">
       Connect Wallet
     </button>
   );

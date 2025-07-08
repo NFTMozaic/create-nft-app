@@ -14,9 +14,11 @@ export function useCollectionMetadata(collectionId: number | undefined) {
   return useQuery<CollectionMetadata>({
     queryKey: ['collection-metadata', collectionId],
     queryFn: async () => {
-      const metadata = await api.query.Nfts.CollectionMetadataOf.getValue(collectionId!);
+      const metadata = await api.query.Nfts.CollectionMetadataOf.getValue(
+        collectionId!
+      );
       if (!metadata) return null;
-      
+
       return {
         deposit: metadata.deposit,
         data: metadata.data.asText(),

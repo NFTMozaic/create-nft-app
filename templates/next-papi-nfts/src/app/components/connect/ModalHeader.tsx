@@ -15,10 +15,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
     <div className="modal-header">
       <div className="modal-header-content">
         {showBackButton && onBack && (
-          <button
-            onClick={onBack}
-            className="modal-back-button"
-          >
+          <button onClick={onBack} className="modal-back-button">
             <svg
               width="20"
               height="20"
@@ -35,14 +32,9 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
             </svg>
           </button>
         )}
-        <h2 className="modal-title">
-          {title}
-        </h2>
+        <h2 className="modal-title">{title}</h2>
       </div>
-      <button
-        onClick={onClose}
-        className="modal-close-button"
-      >
+      <button onClick={onClose} className="modal-close-button">
         <svg
           width="24"
           height="24"
