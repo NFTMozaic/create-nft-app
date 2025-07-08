@@ -10,6 +10,7 @@ const ora = require('ora').default;
 const TEMPLATE_MAPPING = {
   'next-foundry-pvm': 'Next.js + Foundry (Polkadot VM)',
   'next-unique-nfts': 'Next.js + Unique SDK (Pallet NFTs)',
+  'next-papi-nfts': 'Next.js + PAPI (Pallet NFTs)',
 };
 
 /**
