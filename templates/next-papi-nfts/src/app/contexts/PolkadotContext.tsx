@@ -4,12 +4,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { dot } from "@polkadot-api/descriptors";
 import { createClient, PolkadotClient, TypedApi } from "polkadot-api";
 import { getSmProvider } from "polkadot-api/sm-provider";
-import { chainSpec } from "polkadot-api/chains/polkadot";
-import { startFromWorker } from "polkadot-api/smoldot/from-worker";
-
-const SmWorker = () => new Worker(
-  new URL("polkadot-api/smoldot/worker", import.meta.url)
-);
+import { start } from "polkadot-api/smoldot";
+import { chainSpec } from "polkadot-api/chains/paseo_asset_hub";
+import { chainSpec as chainSpecPaseo } from "polkadot-api/chains/paseo";
 
 interface PolkadotContextType {
   client: PolkadotClient;
@@ -39,11 +36,15 @@ export const PolkadotProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       try {
         setError(null);
         
-        const worker = SmWorker();
-        const smoldot = startFromWorker(worker);
-        const chain = await smoldot.addChain({ chainSpec });
+        const sm = start();
+        const relayChain = await sm.addChain({ chainSpec: chainSpecPaseo });
         
-        const polkadotClient = createClient(getSmProvider(chain));
+        const passetChain = await sm.addChain({
+          chainSpec,
+          potentialRelayChains: [relayChain],
+        });
+        
+        const polkadotClient = createClient(getSmProvider(passetChain));
         setClient(polkadotClient);
         
         const dotApi = polkadotClient.getTypedApi(dot);
@@ -52,7 +53,7 @@ export const PolkadotProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // Subscribe to finalized blocks to check connection
         polkadotClient.finalizedBlock$.subscribe({
           next: (finalizedBlock) => {
-            console.log('Connected to AssetHub:', finalizedBlock.number, finalizedBlock.hash);
+            console.log('Connected to Passet Hub Testnet:', finalizedBlock.number, finalizedBlock.hash);
             setIsConnected(true);
           },
           error: (err) => {
