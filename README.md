@@ -11,11 +11,15 @@ One-command setup for Polkadot NFT projects.
 npx create-nft-app my-app
 ```
 
+```sh
+npm create nft-app@latest my-app
+```
+
 ## Available Templates
 
 - **Next.js + Foundry (Polkadot VM)** - Full-stack NFT dApp with Next.js, Wagmi, and Foundry for Polkadot Passet Hub
   - Features: Next.js 15, Reown AppKit, Wagmi v2, Foundry
-  - [Template Documentation](templates/next-foundry/README.md)
+  - [Template Documentation](https://github.com/NFTMozaic/create-nft-app/blob/main/templates/next-foundry-pvm/README.md)
 
 ## Development
 
