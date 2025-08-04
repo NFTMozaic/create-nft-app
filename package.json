@@ -1,6 +1,6 @@
 {
   "name": "create-nft-app",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "One-command setup for Polkadot NFT projects",
   "main": "bin/cli.js",
   "bin": {

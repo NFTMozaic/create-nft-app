@@ -1,5 +1,11 @@
 # create-nft-app
 
+## 0.1.2
+
+### Patch Changes
+
+- Fix PAPI template: include stub papi descriptors
+
 ## 0.1.0
 
 ### Minor Changes
