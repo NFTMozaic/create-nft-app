@@ -9,7 +9,7 @@ export function Header() {
       <div className="app-header-container">
         <Link href="/">
           <Image
-            src="/logo.png"
+            src="/logo.svg"
             alt="NFTMozaic Logo"
             height={0}
             width={60}
