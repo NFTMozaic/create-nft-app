@@ -9,7 +9,7 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <Image
-              src="/logo.png"
+              src="/logo.svg"
               alt="NFTMozaic Logo"
               height={0}
               width={60}
