@@ -6,11 +6,11 @@ export const projectId =
   process.env.NEXT_PUBLIC_PROJECT_ID || 'b56e18d47c72ab683b10814fe9495694'; // this is a public projectId only to use on localhost
 
 const pvmTestnet: AppKitNetwork = {
-  id: 420420421,
+  id: 420420422,
   name: 'PVM Testnet',
   nativeCurrency: {
-    name: 'WND',
-    symbol: 'WND',
+    name: 'PAS',
+    symbol: 'PAS',
     decimals: 18,
   },
   rpcUrls: {
