@@ -1,5 +1,11 @@
 # create-nft-app
 
+## 0.2.0
+
+### Minor Changes
+
+- Simplify PVM template
+
 ## 0.1.2
 
 ### Patch Changes
