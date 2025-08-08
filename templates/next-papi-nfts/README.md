@@ -2,7 +2,13 @@
 
 ## Setup
 
-1. Download metadata from your target chain:
+1. Install packages
+
+```sh
+pnpm install
+```
+
+2. Download metadata from your target chain:
 
 ```sh
 npx papi add dot -n paseo_asset_hub
@@ -12,12 +18,6 @@ Or use a websocket URL:
 
 ```sh
 npx papi add dot -w wss://...
-```
-
-2. Generate types:
-
-```sh
-npx papi
 ```
 
 ## PAPI
