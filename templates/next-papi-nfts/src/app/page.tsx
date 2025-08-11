@@ -1,3 +1,7 @@
+import { CollectionManagementComponent } from "./components/CollectionManagementComponent";
+
 export default function Home() {
-  return <div></div>;
+  return <div>
+    <CollectionManagementComponent />
+  </div>;
 }
