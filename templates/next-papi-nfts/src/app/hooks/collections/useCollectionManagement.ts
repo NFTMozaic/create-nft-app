@@ -21,11 +21,41 @@ export interface CollectionDestroyWitness {
   item_metadatas: number;
 }
 
+interface OperationState {
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface States {
+  createCollection: OperationState;
+  setMaxSupply: OperationState;
+  lockCollection: OperationState;
+  destroyCollection: OperationState;
+  getWitness: OperationState;
+  getNextId: OperationState;
+  getCollection: OperationState;
+}
+
 export const useCollectionManagement = () => {
   const { api, isConnected } = usePolkadot();
   const { selectedAccount } = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
+  const [states, setStates] = useState<States>({
+    createCollection: { isLoading: false, error: null },
+    setMaxSupply: { isLoading: false, error: null },
+    lockCollection: { isLoading: false, error: null },
+    destroyCollection: { isLoading: false, error: null },
+    getWitness: { isLoading: false, error: null },
+    getNextId: { isLoading: false, error: null },
+    getCollection: { isLoading: false, error: null },
+  });
+
+  const updateState = useCallback((operation: keyof States, update: Partial<OperationState>) => {
+    setStates(prev => ({
+      ...prev,
+      [operation]: { ...prev[operation], ...update }
+    }));
+  }, []);
 
   // Create a new NFT collection
   const createCollection = useCallback(
@@ -34,8 +64,7 @@ export const useCollectionManagement = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('createCollection', { isLoading: true, error: null });
 
       try {
         // Get the next collection ID first
@@ -74,13 +103,13 @@ export const useCollectionManagement = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to create collection';
-        setError(errorMessage);
+        updateState('createCollection', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('createCollection', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Set collection maximum supply
@@ -90,8 +119,7 @@ export const useCollectionManagement = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('setMaxSupply', { isLoading: true, error: null });
 
       try {
         const setMaxSupplyTx = await api.tx.Nfts.set_collection_max_supply({
@@ -109,13 +137,13 @@ export const useCollectionManagement = () => {
           err instanceof Error
             ? err.message
             : 'Failed to set collection max supply';
-        setError(errorMessage);
+        updateState('setMaxSupply', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('setMaxSupply', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Lock collection settings permanently
@@ -125,8 +153,7 @@ export const useCollectionManagement = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('lockCollection', { isLoading: true, error: null });
 
       try {
         const lockCollectionTx = await api.tx.Nfts.lock_collection({
@@ -142,13 +169,13 @@ export const useCollectionManagement = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to lock collection';
-        setError(errorMessage);
+        updateState('lockCollection', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('lockCollection', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Destroy a collection (only if no items exist)
@@ -158,8 +185,7 @@ export const useCollectionManagement = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('destroyCollection', { isLoading: true, error: null });
 
       try {
         // Get witness data if not provided
@@ -190,13 +216,13 @@ export const useCollectionManagement = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to destroy collection';
-        setError(errorMessage);
+        updateState('destroyCollection', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('destroyCollection', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Get collection witness data for destroy operation
@@ -205,6 +231,8 @@ export const useCollectionManagement = () => {
       if (!api) {
         throw new Error('Polkadot API not connected');
       }
+
+      updateState('getWitness', { isLoading: true, error: null });
 
       try {
         const collection =
@@ -223,10 +251,13 @@ export const useCollectionManagement = () => {
           err instanceof Error
             ? err.message
             : 'Failed to get collection witness data';
+        updateState('getWitness', { error: errorMessage });
         throw new Error(errorMessage);
+      } finally {
+        updateState('getWitness', { isLoading: false });
       }
     },
-    [api]
+    [api, updateState]
   );
 
   // Get next available collection ID
@@ -234,6 +265,8 @@ export const useCollectionManagement = () => {
     if (!api) {
       throw new Error('Polkadot API not connected');
     }
+
+    updateState('getNextId', { isLoading: true, error: null });
 
     try {
       const nextCollectionId = await api.query.Nfts.NextCollectionId.getValue();
@@ -244,9 +277,12 @@ export const useCollectionManagement = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to get next collection ID';
+      updateState('getNextId', { error: errorMessage });
       throw new Error(errorMessage);
+    } finally {
+      updateState('getNextId', { isLoading: false });
     }
-  }, [api]);
+  }, [api, updateState]);
 
   // Get collection details
   const getCollection = useCallback(
@@ -254,6 +290,8 @@ export const useCollectionManagement = () => {
       if (!api) {
         throw new Error('Polkadot API not connected');
       }
+
+      updateState('getCollection', { isLoading: true, error: null });
 
       try {
         const collection =
@@ -264,10 +302,13 @@ export const useCollectionManagement = () => {
           err instanceof Error
             ? err.message
             : 'Failed to get collection details';
+        updateState('getCollection', { error: errorMessage });
         throw new Error(errorMessage);
+      } finally {
+        updateState('getCollection', { isLoading: false });
       }
     },
-    [api]
+    [api, updateState]
   );
 
   return {
@@ -283,8 +324,9 @@ export const useCollectionManagement = () => {
     getCollection,
 
     // State
-    isLoading,
-    error,
+    states,
+    isLoading: Object.values(states).some(state => state.isLoading),
+    error: Object.values(states).find(state => state.error)?.error || null,
     isReady: !!api && !!selectedAccount && isConnected,
   };
 };

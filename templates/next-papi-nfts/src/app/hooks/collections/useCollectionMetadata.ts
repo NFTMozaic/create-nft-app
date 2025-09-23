@@ -12,11 +12,45 @@ type AttributeNamespace = Enum<{
   Account: SS58String;
 }>
 
+interface OperationState {
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface States {
+  setMetadata: OperationState;
+  clearMetadata: OperationState;
+  getMetadata: OperationState;
+  setAttribute: OperationState;
+  clearAttribute: OperationState;
+  getAttribute: OperationState;
+  getAllAttributes: OperationState;
+  setAttributes: OperationState;
+  getInfo: OperationState;
+}
+
 export const useCollectionMetadata = () => {
   const { api, isConnected } = usePolkadot();
   const { selectedAccount } = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
+  const [states, setStates] = useState<States>({
+    setMetadata: { isLoading: false, error: null },
+    clearMetadata: { isLoading: false, error: null },
+    getMetadata: { isLoading: false, error: null },
+    setAttribute: { isLoading: false, error: null },
+    clearAttribute: { isLoading: false, error: null },
+    getAttribute: { isLoading: false, error: null },
+    getAllAttributes: { isLoading: false, error: null },
+    setAttributes: { isLoading: false, error: null },
+    getInfo: { isLoading: false, error: null },
+  });
+
+  const updateState = useCallback((operation: keyof States, update: Partial<OperationState>) => {
+    setStates(prev => ({
+      ...prev,
+      [operation]: { ...prev[operation], ...update }
+    }));
+  }, []);
 
   // Set collection metadata
   const setCollectionMetadata = useCallback(async (collectionId: number, metadataUrl: string) => {
@@ -24,8 +58,7 @@ export const useCollectionMetadata = () => {
       throw new Error('Polkadot API or wallet not connected');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('setMetadata', { isLoading: true, error: null });
 
     try {
       const setMetadataTx = await api.tx.Nfts.set_collection_metadata({
@@ -40,12 +73,12 @@ export const useCollectionMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to set collection metadata';
-      setError(errorMessage);
+      updateState('setMetadata', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('setMetadata', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Clear collection metadata
   const clearCollectionMetadata = useCallback(async (collectionId: number) => {
@@ -53,8 +86,7 @@ export const useCollectionMetadata = () => {
       throw new Error('Polkadot API or wallet not connected');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('clearMetadata', { isLoading: true, error: null });
 
     try {
       const clearMetadataTx = await api.tx.Nfts.clear_collection_metadata({
@@ -68,18 +100,20 @@ export const useCollectionMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to clear collection metadata';
-      setError(errorMessage);
+      updateState('clearMetadata', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('clearMetadata', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Get collection metadata
   const getCollectionMetadata = useCallback(async (collectionId: number) => {
     if (!api) {
       throw new Error('Polkadot API not connected');
     }
+
+    updateState('getMetadata', { isLoading: true, error: null });
 
     try {
       const metadata = await api.query.Nfts.CollectionMetadataOf.getValue(collectionId);
@@ -94,9 +128,12 @@ export const useCollectionMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get collection metadata';
+      updateState('getMetadata', { error: errorMessage });
       throw new Error(errorMessage);
+    } finally {
+      updateState('getMetadata', { isLoading: false });
     }
-  }, [api]);
+  }, [api, updateState]);
 
   // Set collection attribute
   const setCollectionAttribute = useCallback(async (
@@ -109,8 +146,7 @@ export const useCollectionMetadata = () => {
       throw new Error('Polkadot API or wallet not connected');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('setAttribute', { isLoading: true, error: null });
 
     try {
       const setAttributeTx = await api.tx.Nfts.set_attribute({
@@ -128,12 +164,12 @@ export const useCollectionMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to set collection attribute';
-      setError(errorMessage);
+      updateState('setAttribute', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('setAttribute', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Clear collection attribute
   const clearCollectionAttribute = useCallback(async (
@@ -145,8 +181,7 @@ export const useCollectionMetadata = () => {
       throw new Error('Polkadot API or wallet not connected');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('clearAttribute', { isLoading: true, error: null });
 
     try {
       const clearAttributeTx = await api.tx.Nfts.clear_attribute({
@@ -163,12 +198,12 @@ export const useCollectionMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to clear collection attribute';
-      setError(errorMessage);
+      updateState('clearAttribute', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('clearAttribute', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Get collection attribute
   const getCollectionAttribute = useCallback(async (
@@ -179,6 +214,9 @@ export const useCollectionMetadata = () => {
     if (!api) {
       throw new Error('Polkadot API not connected');
     }
+    console.log(namespace, 'namespace')
+
+    updateState('getAttribute', { isLoading: true, error: null });
 
     try {
       const attribute = await api.query.Nfts.Attribute.getValue(
@@ -195,9 +233,12 @@ export const useCollectionMetadata = () => {
       return attribute;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get collection attribute';
+      updateState('getAttribute', { error: errorMessage });
       throw new Error(errorMessage);
+    } finally {
+      updateState('getAttribute', { isLoading: false });
     }
-  }, [api]);
+  }, [api, updateState]);
 
   // Get all collection attributes
   const getAllCollectionAttributes = useCallback(async (collectionId: number) => {
@@ -205,15 +246,20 @@ export const useCollectionMetadata = () => {
       throw new Error('Polkadot API not connected');
     }
 
+    updateState('getAllAttributes', { isLoading: true, error: null });
+
     try {
       const attributes = await api.query.Nfts.Attribute.getEntries(collectionId, undefined);
       
       return attributes;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get collection attributes';
+      updateState('getAllAttributes', { error: errorMessage });
       throw new Error(errorMessage);
+    } finally {
+      updateState('getAllAttributes', { isLoading: false });
     }
-  }, [api]);
+  }, [api, updateState]);
 
   // Batch set multiple collection attributes
   const setCollectionAttributes = useCallback(async (
@@ -229,8 +275,7 @@ export const useCollectionMetadata = () => {
       throw new Error('No attributes provided');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('setAttributes', { isLoading: true, error: null });
 
     try {
       const calls = attributes.map(attr => 
@@ -254,18 +299,20 @@ export const useCollectionMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to set collection attributes';
-      setError(errorMessage);
+      updateState('setAttributes', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('setAttributes', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Get collection info including metadata and attributes
   const getCollectionInfo = useCallback(async (collectionId: number) => {
     if (!api) {
       throw new Error('Polkadot API not connected');
     }
+
+    updateState('getInfo', { isLoading: true, error: null });
 
     try {
       const [collection, metadata, attributes] = await Promise.all([
@@ -281,9 +328,12 @@ export const useCollectionMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get collection info';
+      updateState('getInfo', { error: errorMessage });
       throw new Error(errorMessage);
+    } finally {
+      updateState('getInfo', { isLoading: false });
     }
-  }, [api, getCollectionMetadata, getAllCollectionAttributes]);
+  }, [api, getCollectionMetadata, getAllCollectionAttributes, updateState]);
 
   return {
     // Metadata functions
@@ -300,10 +350,10 @@ export const useCollectionMetadata = () => {
     
     // Combined info function
     getCollectionInfo,
-    
     // State
-    isLoading,
-    error,
+    states,
+    isLoading: Object.values(states).some(state => state.isLoading),
+    error: Object.values(states).find(state => state.error)?.error || null,
     isReady: !!api && !!selectedAccount && isConnected,
   };
 };

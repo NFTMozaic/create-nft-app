@@ -23,11 +23,45 @@ export interface OwnershipTransfer {
   newOwner: string;
 }
 
+interface OperationState {
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface States {
+  setTeam: OperationState;
+  getRoles: OperationState;
+  getTeamMembers: OperationState;
+  getOwner: OperationState;
+  setAcceptOwnership: OperationState;
+  transferOwnership: OperationState;
+  completeTransfer: OperationState;
+  getOwnedCollections: OperationState;
+  getCollectionsWithRoles: OperationState;
+}
+
 export const useCollectionRoles = () => {
   const { api, isConnected } = usePolkadot();
   const { selectedAccount } = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
+  const [states, setStates] = useState<States>({
+    setTeam: { isLoading: false, error: null },
+    getRoles: { isLoading: false, error: null },
+    getTeamMembers: { isLoading: false, error: null },
+    getOwner: { isLoading: false, error: null },
+    setAcceptOwnership: { isLoading: false, error: null },
+    transferOwnership: { isLoading: false, error: null },
+    completeTransfer: { isLoading: false, error: null },
+    getOwnedCollections: { isLoading: false, error: null },
+    getCollectionsWithRoles: { isLoading: false, error: null },
+  });
+
+  const updateState = useCallback((operation: keyof States, update: Partial<OperationState>) => {
+    setStates(prev => ({
+      ...prev,
+      [operation]: { ...prev[operation], ...update }
+    }));
+  }, []);
 
   // Set collection team (Admin, Issuer, Freezer)
   const setCollectionTeam = useCallback(
@@ -36,8 +70,7 @@ export const useCollectionRoles = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('setTeam', { isLoading: true, error: null });
 
       try {
         const setTeamTx = await api.tx.Nfts.set_team({
@@ -55,13 +88,13 @@ export const useCollectionRoles = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to set collection team';
-        setError(errorMessage);
+        updateState('setTeam', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('setTeam', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Get collection roles for a specific account
@@ -73,6 +106,8 @@ export const useCollectionRoles = () => {
       if (!api) {
         throw new Error('Polkadot API not connected');
       }
+
+      updateState('getRoles', { isLoading: true, error: null });
 
       try {
         const roles = await api.query.Nfts.CollectionRoleOf.getValue(
@@ -99,10 +134,13 @@ export const useCollectionRoles = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to get collection roles';
+        updateState('getRoles', { error: errorMessage });
         throw new Error(errorMessage);
+      } finally {
+        updateState('getRoles', { isLoading: false });
       }
     },
-    [api]
+    [api, updateState]
   );
 
   // Check if current account has specific role
@@ -148,6 +186,8 @@ export const useCollectionRoles = () => {
         throw new Error('Polkadot API not connected');
       }
 
+      updateState('getTeamMembers', { isLoading: true, error: null });
+
       try {
         const roleEntries =
           await api.query.Nfts.CollectionRoleOf.getEntries(collectionId);
@@ -171,10 +211,13 @@ export const useCollectionRoles = () => {
           err instanceof Error
             ? err.message
             : 'Failed to get collection team members';
+        updateState('getTeamMembers', { error: errorMessage });
         throw new Error(errorMessage);
+      } finally {
+        updateState('getTeamMembers', { isLoading: false });
       }
     },
-    [api]
+    [api, updateState]
   );
 
   // Set accept ownership (step 1 of ownership transfer)
@@ -184,8 +227,7 @@ export const useCollectionRoles = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('setAcceptOwnership', { isLoading: true, error: null });
 
       try {
         const acceptTx = await api.tx.Nfts.set_accept_ownership({
@@ -200,13 +242,13 @@ export const useCollectionRoles = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to set accept ownership';
-        setError(errorMessage);
+        updateState('setAcceptOwnership', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('setAcceptOwnership', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Transfer ownership (step 2 of ownership transfer)
@@ -216,8 +258,7 @@ export const useCollectionRoles = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('transferOwnership', { isLoading: true, error: null });
 
       try {
         const transferTx = await api.tx.Nfts.transfer_ownership({
@@ -233,13 +274,13 @@ export const useCollectionRoles = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to transfer ownership';
-        setError(errorMessage);
+        updateState('transferOwnership', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('transferOwnership', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Complete ownership transfer (both steps in sequence)
@@ -253,8 +294,7 @@ export const useCollectionRoles = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('completeTransfer', { isLoading: true, error: null });
 
       try {
         // Step 1: New owner accepts ownership
@@ -285,13 +325,13 @@ export const useCollectionRoles = () => {
           err instanceof Error
             ? err.message
             : 'Failed to complete ownership transfer';
-        setError(errorMessage);
+        updateState('completeTransfer', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('completeTransfer', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Get collection owner
@@ -301,6 +341,8 @@ export const useCollectionRoles = () => {
         throw new Error('Polkadot API not connected');
       }
 
+      updateState('getOwner', { isLoading: true, error: null });
+
       try {
         const collection =
           await api.query.Nfts.Collection.getValue(collectionId);
@@ -308,10 +350,13 @@ export const useCollectionRoles = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to get collection owner';
+        updateState('getOwner', { error: errorMessage });
         throw new Error(errorMessage);
+      } finally {
+        updateState('getOwner', { isLoading: false });
       }
     },
-    [api]
+    [api, updateState]
   );
 
   // Check if current account is collection owner
@@ -344,6 +389,8 @@ export const useCollectionRoles = () => {
       if (!address) {
         throw new Error('No account address provided');
       }
+
+      updateState('getOwnedCollections', { isLoading: true, error: null });
 
       try {
         const ownedCollections =
@@ -382,10 +429,13 @@ export const useCollectionRoles = () => {
           err instanceof Error
             ? err.message
             : 'Failed to query owned collections';
+        updateState('getOwnedCollections', { error: errorMessage });
         throw new Error(errorMessage);
+      } finally {
+        updateState('getOwnedCollections', { isLoading: false });
       }
     },
-    [api, selectedAccount]
+    [api, selectedAccount, updateState]
   );
 
   // Get collections where account has any role
@@ -399,6 +449,8 @@ export const useCollectionRoles = () => {
       if (!address) {
         throw new Error('No account address provided');
       }
+
+      updateState('getCollectionsWithRoles', { isLoading: true, error: null });
 
       try {
         const roleEntries = await api.query.Nfts.CollectionRoleOf.getEntries();
@@ -453,10 +505,13 @@ export const useCollectionRoles = () => {
           err instanceof Error
             ? err.message
             : 'Failed to get collections with roles';
+        updateState('getCollectionsWithRoles', { error: errorMessage });
         throw new Error(errorMessage);
+      } finally {
+        updateState('getCollectionsWithRoles', { isLoading: false });
       }
     },
-    [api, selectedAccount]
+    [api, selectedAccount, updateState]
   );
 
   // Utility function to decode role bitflags
@@ -508,8 +563,9 @@ export const useCollectionRoles = () => {
     encodeRoles,
 
     // State
-    isLoading,
-    error,
+    states,
+    isLoading: Object.values(states).some(state => state.isLoading),
+    error: Object.values(states).find(state => state.error)?.error || null,
     isReady: !!api && !!selectedAccount && isConnected,
   };
 };
