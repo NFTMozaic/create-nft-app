@@ -5,11 +5,43 @@ import { MultiAddress } from '@polkadot-api/descriptors';
 import { usePolkadot } from '../../contexts/PolkadotContext';
 import { useWallet } from '../../contexts/WalletContext';
 
+interface OperationState {
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface States {
+  transfer: OperationState;
+  approveTransfer: OperationState;
+  cancelApproval: OperationState;
+  clearAllTransferApprovals: OperationState;
+  approveItemAttributes: OperationState;
+  cancelItemAttributesApproval: OperationState;
+  getOwnedNFTs: OperationState;
+  batchTransfer: OperationState;
+}
+
 export const useNFTTransfers = () => {
   const { api, isConnected } = usePolkadot();
   const { selectedAccount } = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
+  const [states, setStates] = useState<States>({
+    transfer: { isLoading: false, error: null },
+    approveTransfer: { isLoading: false, error: null },
+    cancelApproval: { isLoading: false, error: null },
+    clearAllTransferApprovals: { isLoading: false, error: null },
+    approveItemAttributes: { isLoading: false, error: null },
+    cancelItemAttributesApproval: { isLoading: false, error: null },
+    getOwnedNFTs: { isLoading: false, error: null },
+    batchTransfer: { isLoading: false, error: null },
+  });
+
+  const updateState = useCallback((operation: keyof States, update: Partial<OperationState>) => {
+    setStates(prev => ({
+      ...prev,
+      [operation]: { ...prev[operation], ...update }
+    }));
+  }, []);
 
   // Transfer NFT directly
   const transfer = useCallback(
@@ -18,8 +50,7 @@ export const useNFTTransfers = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('transfer', { isLoading: true, error: null });
 
       try {
         const transferTx = await api.tx.Nfts.transfer({
@@ -36,13 +67,13 @@ export const useNFTTransfers = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to transfer NFT';
-        setError(errorMessage);
+        updateState('transfer', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('transfer', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Approve transfer delegation
@@ -57,8 +88,7 @@ export const useNFTTransfers = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('approveTransfer', { isLoading: true, error: null });
 
       try {
         const approveTx = await api.tx.Nfts.approve_transfer({
@@ -76,13 +106,13 @@ export const useNFTTransfers = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to approve transfer';
-        setError(errorMessage);
+        updateState('approveTransfer', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('approveTransfer', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Cancel specific transfer approval
@@ -92,8 +122,7 @@ export const useNFTTransfers = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('cancelApproval', { isLoading: true, error: null });
 
       try {
         const cancelTx = await api.tx.Nfts.cancel_approval({
@@ -110,13 +139,13 @@ export const useNFTTransfers = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to cancel approval';
-        setError(errorMessage);
+        updateState('cancelApproval', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('cancelApproval', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Clear all transfer approvals
@@ -126,8 +155,7 @@ export const useNFTTransfers = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('clearAllTransferApprovals', { isLoading: true, error: null });
 
       try {
         const clearTx = await api.tx.Nfts.clear_all_transfer_approvals({
@@ -145,13 +173,13 @@ export const useNFTTransfers = () => {
           err instanceof Error
             ? err.message
             : 'Failed to clear all transfer approvals';
-        setError(errorMessage);
+        updateState('clearAllTransferApprovals', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('clearAllTransferApprovals', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Get current transfer approvals
@@ -182,8 +210,7 @@ export const useNFTTransfers = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('approveItemAttributes', { isLoading: true, error: null });
 
       try {
         const approveTx = await api.tx.Nfts.approve_item_attributes({
@@ -202,13 +229,13 @@ export const useNFTTransfers = () => {
           err instanceof Error
             ? err.message
             : 'Failed to approve item attributes';
-        setError(errorMessage);
+        updateState('approveItemAttributes', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('approveItemAttributes', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Cancel attribute modification approval
@@ -223,8 +250,7 @@ export const useNFTTransfers = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('cancelItemAttributesApproval', { isLoading: true, error: null });
 
       try {
         const cancelTx = await api.tx.Nfts.cancel_item_attributes_approval({
@@ -244,13 +270,13 @@ export const useNFTTransfers = () => {
           err instanceof Error
             ? err.message
             : 'Failed to cancel item attributes approval';
-        setError(errorMessage);
+        updateState('cancelItemAttributesApproval', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('cancelItemAttributesApproval', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Get attribute modification approvals
@@ -368,6 +394,8 @@ export const useNFTTransfers = () => {
         throw new Error('No account address provided');
       }
 
+      updateState('getOwnedNFTs', { isLoading: true, error: null });
+
       try {
         const ownedItems = await api.query.Nfts.Account.getEntries(address);
 
@@ -381,10 +409,13 @@ export const useNFTTransfers = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to get owned NFTs';
+        updateState('getOwnedNFTs', { error: errorMessage });
         throw new Error(errorMessage);
+      } finally {
+        updateState('getOwnedNFTs', { isLoading: false });
       }
     },
-    [api, selectedAccount]
+    [api, selectedAccount, updateState]
   );
 
   // Batch transfer multiple NFTs
@@ -404,8 +435,7 @@ export const useNFTTransfers = () => {
         throw new Error('No transfers provided');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('batchTransfer', { isLoading: true, error: null });
 
       try {
         const calls = transfers.map(
@@ -429,13 +459,13 @@ export const useNFTTransfers = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to batch transfer NFTs';
-        setError(errorMessage);
+        updateState('batchTransfer', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('batchTransfer', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   return {
@@ -462,8 +492,9 @@ export const useNFTTransfers = () => {
     getOwnedNFTs,
 
     // State
-    isLoading,
-    error,
+    states,
+    isLoading: Object.values(states).some(state => state.isLoading),
+    error: Object.values(states).find(state => state.error)?.error || null,
     isReady: !!api && !!selectedAccount && isConnected,
   };
 };

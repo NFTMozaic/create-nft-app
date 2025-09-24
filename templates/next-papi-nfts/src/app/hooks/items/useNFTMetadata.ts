@@ -21,11 +21,47 @@ export interface PreSignedAttributeData {
   attributes: FixedSizeArray<2, Binary>[];
 }
 
+interface OperationState {
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface States {
+  setMetadata: OperationState;
+  clearMetadata: OperationState;
+  getMetadata: OperationState;
+  setAttribute: OperationState;
+  clearAttribute: OperationState;
+  getAttribute: OperationState;
+  getAttributes: OperationState;
+  setAttributes: OperationState;
+  setPresignedAttributes: OperationState;
+  getNFTInfo: OperationState;
+}
+
 export const useNFTMetadata = () => {
   const { api, isConnected } = usePolkadot();
   const { selectedAccount } = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
+  const [states, setStates] = useState<States>({
+    setMetadata: { isLoading: false, error: null },
+    clearMetadata: { isLoading: false, error: null },
+    getMetadata: { isLoading: false, error: null },
+    setAttribute: { isLoading: false, error: null },
+    clearAttribute: { isLoading: false, error: null },
+    getAttribute: { isLoading: false, error: null },
+    getAttributes: { isLoading: false, error: null },
+    setAttributes: { isLoading: false, error: null },
+    setPresignedAttributes: { isLoading: false, error: null },
+    getNFTInfo: { isLoading: false, error: null },
+  });
+
+  const updateState = useCallback((operation: keyof States, update: Partial<OperationState>) => {
+    setStates(prev => ({
+      ...prev,
+      [operation]: { ...prev[operation], ...update }
+    }));
+  }, []);
 
   // Set NFT metadata
   const setMetadata = useCallback(async (
@@ -37,8 +73,7 @@ export const useNFTMetadata = () => {
       throw new Error('Polkadot API or wallet not connected');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('setMetadata', { isLoading: true, error: null });
 
     try {
       const setMetadataTx = await api.tx.Nfts.set_metadata({
@@ -54,12 +89,12 @@ export const useNFTMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to set NFT metadata';
-      setError(errorMessage);
+      updateState('setMetadata', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('setMetadata', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Clear NFT metadata
   const clearMetadata = useCallback(async (
@@ -70,8 +105,7 @@ export const useNFTMetadata = () => {
       throw new Error('Polkadot API or wallet not connected');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('clearMetadata', { isLoading: true, error: null });
 
     try {
       const clearMetadataTx = await api.tx.Nfts.clear_metadata({
@@ -86,12 +120,12 @@ export const useNFTMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to clear NFT metadata';
-      setError(errorMessage);
+      updateState('clearMetadata', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('clearMetadata', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Get NFT metadata
   const getMetadata = useCallback(async (
@@ -101,6 +135,8 @@ export const useNFTMetadata = () => {
     if (!api) {
       throw new Error('Polkadot API not connected');
     }
+
+    updateState('getMetadata', { isLoading: true, error: null });
 
     try {
       const metadata = await api.query.Nfts.ItemMetadataOf.getValue(collectionId, itemId);
@@ -115,9 +151,12 @@ export const useNFTMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get NFT metadata';
+      updateState('getMetadata', { error: errorMessage });
       throw new Error(errorMessage);
+    } finally {
+      updateState('getMetadata', { isLoading: false });
     }
-  }, [api]);
+  }, [api, updateState]);
 
   // Set NFT attribute
   const setAttribute = useCallback(async (
@@ -131,8 +170,7 @@ export const useNFTMetadata = () => {
       throw new Error('Polkadot API or wallet not connected');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('setAttribute', { isLoading: true, error: null });
 
     try {
       const setAttributeTx = await api.tx.Nfts.set_attribute({
@@ -150,12 +188,12 @@ export const useNFTMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to set NFT attribute';
-      setError(errorMessage);
+      updateState('setAttribute', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('setAttribute', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Clear NFT attribute
   const clearAttribute = useCallback(async (
@@ -168,8 +206,7 @@ export const useNFTMetadata = () => {
       throw new Error('Polkadot API or wallet not connected');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('clearAttribute', { isLoading: true, error: null });
 
     try {
       const clearAttributeTx = await api.tx.Nfts.clear_attribute({
@@ -186,12 +223,12 @@ export const useNFTMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to clear NFT attribute';
-      setError(errorMessage);
+      updateState('clearAttribute', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('clearAttribute', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Get NFT attribute
   const getAttribute = useCallback(async (
@@ -203,6 +240,8 @@ export const useNFTMetadata = () => {
     if (!api) {
       throw new Error('Polkadot API not connected');
     }
+
+    updateState('getAttribute', { isLoading: true, error: null });
 
     try {
       const attribute = await api.query.Nfts.Attribute.getValue(
@@ -219,9 +258,12 @@ export const useNFTMetadata = () => {
       return attribute;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get NFT attribute';
+      updateState('getAttribute', { error: errorMessage });
       throw new Error(errorMessage);
+    } finally {
+      updateState('getAttribute', { isLoading: false });
     }
-  }, [api]);
+  }, [api, updateState]);
 
   // Get all NFT attributes
   const getAttributes = useCallback(async (
@@ -232,15 +274,20 @@ export const useNFTMetadata = () => {
       throw new Error('Polkadot API not connected');
     }
 
+    updateState('getAttributes', { isLoading: true, error: null });
+
     try {
       const attributes = await api.query.Nfts.Attribute.getEntries(collectionId, itemId);
       
       return attributes;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get NFT attributes';
+      updateState('getAttributes', { error: errorMessage });
       throw new Error(errorMessage);
+    } finally {
+      updateState('getAttributes', { isLoading: false });
     }
-  }, [api]);
+  }, [api, updateState]);
 
   // Set multiple attributes in batch
   const setAttributes = useCallback(async (
@@ -257,8 +304,7 @@ export const useNFTMetadata = () => {
       throw new Error('No attributes provided');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('setAttributes', { isLoading: true, error: null });
 
     try {
       const calls = attributes.map(attr => 
@@ -282,12 +328,12 @@ export const useNFTMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to set NFT attributes';
-      setError(errorMessage);
+      updateState('setAttributes', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('setAttributes', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Execute presigned attributes
   const setPresignedAttributes = useCallback(async (
@@ -299,8 +345,7 @@ export const useNFTMetadata = () => {
       throw new Error('Polkadot API or wallet not connected');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('setPresignedAttributes', { isLoading: true, error: null });
 
     try {
       const setAttributesTx = await api.tx.Nfts.set_attributes_pre_signed({
@@ -316,12 +361,12 @@ export const useNFTMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to set presigned attributes';
-      setError(errorMessage);
+      updateState('setPresignedAttributes', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('setPresignedAttributes', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Create presigned attribute data (off-chain signing would happen externally)
   const createPreSignedAttributeData = useCallback((
@@ -353,6 +398,8 @@ export const useNFTMetadata = () => {
       throw new Error('Polkadot API not connected');
     }
 
+    updateState('getNFTInfo', { isLoading: true, error: null });
+
     try {
       const [item, metadata, attributes] = await Promise.all([
         api.query.Nfts.Item.getValue(collectionId, itemId),
@@ -367,9 +414,12 @@ export const useNFTMetadata = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get NFT info';
+      updateState('getNFTInfo', { error: errorMessage });
       throw new Error(errorMessage);
+    } finally {
+      updateState('getNFTInfo', { isLoading: false });
     }
-  }, [api, getMetadata, getAttributes]);
+  }, [api, getMetadata, getAttributes, updateState]);
 
   return {
     // Metadata functions
@@ -391,9 +441,10 @@ export const useNFTMetadata = () => {
     // Combined info function
     getNFTInfo,
     
-    // State
-    isLoading,
-    error,
+    // State management
+    states,
+    isLoading: Object.values(states).some(state => state.isLoading),
+    error: Object.values(states).find(state => state.error)?.error || null,
     isReady: !!api && !!selectedAccount && isConnected,
   };
 };

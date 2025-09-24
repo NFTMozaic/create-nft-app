@@ -34,11 +34,39 @@ export interface PreSignedMintData {
   mint_price?: bigint | undefined;
 }
 
+interface OperationState {
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface States {
+  mint: OperationState;
+  mintWithMetadata: OperationState;
+  batchMint: OperationState;
+  mintPreSigned: OperationState;
+  updateMintSettings: OperationState;
+  getNextItemId: OperationState;
+}
+
 export const useNFTMinting = () => {
   const { api, isConnected } = usePolkadot();
   const { selectedAccount } = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
+  const [states, setStates] = useState<States>({
+    mint: { isLoading: false, error: null },
+    mintWithMetadata: { isLoading: false, error: null },
+    batchMint: { isLoading: false, error: null },
+    mintPreSigned: { isLoading: false, error: null },
+    updateMintSettings: { isLoading: false, error: null },
+    getNextItemId: { isLoading: false, error: null },
+  });
+
+  const updateState = useCallback((operation: keyof States, update: Partial<OperationState>) => {
+    setStates(prev => ({
+      ...prev,
+      [operation]: { ...prev[operation], ...update }
+    }));
+  }, []);
 
   // Standard NFT mint
   const mint = useCallback(
@@ -52,8 +80,7 @@ export const useNFTMinting = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('mint', { isLoading: true, error: null });
 
       try {
         const mintTx = await api.tx.Nfts.mint({
@@ -72,13 +99,13 @@ export const useNFTMinting = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to mint NFT';
-        setError(errorMessage);
+        updateState('mint', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('mint', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Mint with metadata and attributes in one transaction
@@ -92,8 +119,7 @@ export const useNFTMinting = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('mintWithMetadata', { isLoading: true, error: null });
 
       try {
         const calls = [];
@@ -147,13 +173,13 @@ export const useNFTMinting = () => {
           err instanceof Error
             ? err.message
             : 'Failed to mint NFT with metadata';
-        setError(errorMessage);
+        updateState('mintWithMetadata', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('mintWithMetadata', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Batch mint multiple NFTs
@@ -171,8 +197,7 @@ export const useNFTMinting = () => {
         throw new Error('No mint data provided');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('batchMint', { isLoading: true, error: null });
 
       try {
         const calls: any[] = [];
@@ -229,13 +254,13 @@ export const useNFTMinting = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to batch mint NFTs';
-        setError(errorMessage);
+        updateState('batchMint', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('batchMint', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Execute presigned mint
@@ -249,8 +274,7 @@ export const useNFTMinting = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('mintPreSigned', { isLoading: true, error: null });
 
       try {
         const mintTx = await api.tx.Nfts.mint_pre_signed({
@@ -270,13 +294,13 @@ export const useNFTMinting = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to mint presigned NFT';
-        setError(errorMessage);
+        updateState('mintPreSigned', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('mintPreSigned', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Create presigned mint data (off-chain signing would happen externally)
@@ -344,8 +368,7 @@ export const useNFTMinting = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('updateMintSettings', { isLoading: true, error: null });
 
       try {
         const updateTx = await api.tx.Nfts.update_mint_settings({
@@ -367,13 +390,13 @@ export const useNFTMinting = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to update mint settings';
-        setError(errorMessage);
+        updateState('updateMintSettings', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('updateMintSettings', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   return {
@@ -389,9 +412,11 @@ export const useNFTMinting = () => {
     // Settings management
     updateMintSettings,
 
+
     // State
-    isLoading,
-    error,
+    states,
+    isLoading: Object.values(states).some(state => state.isLoading),
+    error: Object.values(states).find(state => state.error)?.error || null,
     isReady: !!api && !!selectedAccount && isConnected,
   };
 };

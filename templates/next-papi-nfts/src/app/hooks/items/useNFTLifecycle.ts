@@ -22,11 +22,31 @@ export interface CollectionItemStats {
   }>;
 }
 
+interface OperationState {
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface States {
+  burn: OperationState;
+  batchBurn: OperationState;
+}
+
 export const useNFTLifecycle = () => {
   const { api, isConnected } = usePolkadot();
   const { selectedAccount } = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
+  const [states, setStates] = useState<States>({
+    burn: { isLoading: false, error: null },
+    batchBurn: { isLoading: false, error: null },
+  });
+
+  const updateState = useCallback((operation: keyof States, update: Partial<OperationState>) => {
+    setStates(prev => ({
+      ...prev,
+      [operation]: { ...prev[operation], ...update }
+    }));
+  }, []);
 
   // Burn/destroy an NFT
   const burn = useCallback(async (
@@ -37,8 +57,7 @@ export const useNFTLifecycle = () => {
       throw new Error('Polkadot API or wallet not connected');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('burn', { isLoading: true, error: null });
 
     try {
       const burnTx = await api.tx.Nfts.burn({
@@ -53,12 +72,12 @@ export const useNFTLifecycle = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to burn NFT';
-      setError(errorMessage);
+      updateState('burn', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('burn', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Get NFT details
   const getNFTDetails = useCallback(async (
@@ -172,8 +191,7 @@ export const useNFTLifecycle = () => {
       throw new Error('No items to burn provided');
     }
 
-    setIsLoading(true);
-    setError(null);
+    updateState('batchBurn', { isLoading: true, error: null });
 
     try {
       const calls = burnData.map(({ collectionId, itemId }) =>
@@ -194,12 +212,12 @@ export const useNFTLifecycle = () => {
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to batch burn NFTs';
-      setError(errorMessage);
+      updateState('batchBurn', { error: errorMessage });
       throw new Error(errorMessage);
     } finally {
-      setIsLoading(false);
+      updateState('batchBurn', { isLoading: false });
     }
-  }, [api, selectedAccount, isConnected]);
+  }, [api, selectedAccount, isConnected, updateState]);
 
   // Get items owned by a specific account in a collection
   const getAccountItemsInCollection = useCallback(async (
@@ -366,8 +384,9 @@ export const useNFTLifecycle = () => {
     getNFTHistory,
     
     // State
-    isLoading,
-    error,
+    states,
+    isLoading: Object.values(states).some(state => state.isLoading),
+    error: Object.values(states).find(state => state.error)?.error || null,
     isReady: !!api && !!selectedAccount && isConnected,
   };
 };

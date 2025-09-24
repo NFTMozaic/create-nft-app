@@ -4,11 +4,39 @@ import { useState, useCallback } from 'react';
 import { usePolkadot } from '../../contexts/PolkadotContext';
 import { useWallet } from '../../contexts/WalletContext';
 
+interface OperationState {
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface States {
+  lockItemTransfer: OperationState;
+  unlockItemTransfer: OperationState;
+  lockItemProperties: OperationState;
+  getItemSettings: OperationState;
+  batchLockTransfers: OperationState;
+  batchUnlockTransfers: OperationState;
+}
+
 export const useNFTLocking = () => {
   const { api, isConnected } = usePolkadot();
   const { selectedAccount } = useWallet();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  
+  const [states, setStates] = useState<States>({
+    lockItemTransfer: { isLoading: false, error: null },
+    unlockItemTransfer: { isLoading: false, error: null },
+    lockItemProperties: { isLoading: false, error: null },
+    getItemSettings: { isLoading: false, error: null },
+    batchLockTransfers: { isLoading: false, error: null },
+    batchUnlockTransfers: { isLoading: false, error: null },
+  });
+
+  const updateState = useCallback((operation: keyof States, update: Partial<OperationState>) => {
+    setStates(prev => ({
+      ...prev,
+      [operation]: { ...prev[operation], ...update }
+    }));
+  }, []);
 
   // Lock NFT transfers (Freezer role)
   const lockItemTransfer = useCallback(
@@ -17,8 +45,7 @@ export const useNFTLocking = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('lockItemTransfer', { isLoading: true, error: null });
 
       try {
         const lockTx = await api.tx.Nfts.lock_item_transfer({
@@ -34,13 +61,13 @@ export const useNFTLocking = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to lock item transfer';
-        setError(errorMessage);
+        updateState('lockItemTransfer', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('lockItemTransfer', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Unlock NFT transfers (Freezer role)
@@ -50,8 +77,7 @@ export const useNFTLocking = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('unlockItemTransfer', { isLoading: true, error: null });
 
       try {
         const unlockTx = await api.tx.Nfts.unlock_item_transfer({
@@ -67,13 +93,13 @@ export const useNFTLocking = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to unlock item transfer';
-        setError(errorMessage);
+        updateState('unlockItemTransfer', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('unlockItemTransfer', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Permanently lock NFT properties (Admin role)
@@ -88,8 +114,7 @@ export const useNFTLocking = () => {
         throw new Error('Polkadot API or wallet not connected');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('lockItemProperties', { isLoading: true, error: null });
 
       try {
         const lockTx = await api.tx.Nfts.lock_item_properties({
@@ -107,13 +132,13 @@ export const useNFTLocking = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to lock item properties';
-        setError(errorMessage);
+        updateState('lockItemProperties', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('lockItemProperties', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Get item settings/lock status
@@ -122,6 +147,8 @@ export const useNFTLocking = () => {
       if (!api) {
         throw new Error('Polkadot API not connected');
       }
+
+      updateState('getItemSettings', { isLoading: true, error: null });
 
       try {
         const itemConfig = await api.query.Nfts.ItemConfigOf.getValue(
@@ -148,10 +175,13 @@ export const useNFTLocking = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to get item settings';
+        updateState('getItemSettings', { error: errorMessage });
         throw new Error(errorMessage);
+      } finally {
+        updateState('getItemSettings', { isLoading: false });
       }
     },
-    [api]
+    [api, updateState]
   );
 
   // Check if NFT is transferable
@@ -221,8 +251,7 @@ export const useNFTLocking = () => {
         throw new Error('No items to lock provided');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('batchLockTransfers', { isLoading: true, error: null });
 
       try {
         const calls = lockData.map(
@@ -245,13 +274,13 @@ export const useNFTLocking = () => {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to batch lock transfers';
-        setError(errorMessage);
+        updateState('batchLockTransfers', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('batchLockTransfers', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Batch unlock multiple NFT transfers
@@ -265,8 +294,7 @@ export const useNFTLocking = () => {
         throw new Error('No items to unlock provided');
       }
 
-      setIsLoading(true);
-      setError(null);
+      updateState('batchUnlockTransfers', { isLoading: true, error: null });
 
       try {
         const calls = unlockData.map(
@@ -291,13 +319,13 @@ export const useNFTLocking = () => {
           err instanceof Error
             ? err.message
             : 'Failed to batch unlock transfers';
-        setError(errorMessage);
+        updateState('batchUnlockTransfers', { error: errorMessage });
         throw new Error(errorMessage);
       } finally {
-        setIsLoading(false);
+        updateState('batchUnlockTransfers', { isLoading: false });
       }
     },
-    [api, selectedAccount, isConnected]
+    [api, selectedAccount, isConnected, updateState]
   );
 
   // Utility function to decode item settings bitflags
@@ -349,8 +377,9 @@ export const useNFTLocking = () => {
     encodeItemSettings,
 
     // State
-    isLoading,
-    error,
+    states,
+    isLoading: Object.values(states).some(state => state.isLoading),
+    error: Object.values(states).find(state => state.error)?.error || null,
     isReady: !!api && !!selectedAccount && isConnected,
   };
 };
